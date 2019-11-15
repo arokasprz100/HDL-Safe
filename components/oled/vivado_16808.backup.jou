@@ -1,0 +1,64 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Mon Nov 11 02:28:42 2019
+# Process ID: 16808
+# Current directory: C:/Users/arkad/Desktop/HDL_laboratorium/oled
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent9624 C:\Users\arkad\Desktop\HDL_laboratorium\oled\oled.xpr
+# Log file: C:/Users/arkad/Desktop/HDL_laboratorium/oled/vivado.log
+# Journal file: C:/Users/arkad/Desktop/HDL_laboratorium/oled\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/arkad/Desktop/HDL_laboratorium/oled/oled.xpr
+update_compile_order -fileset sources_1
+launch_simulation
+source tb_fsm_init.tcl
+run 150 ms
+relaunch_sim
+run 150 ms
+relaunch_sim
+run 150 ms
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top oled_top [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+source oled_top.tcl
+run 150 ms
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top tb_fsm_init [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open C:/Users/arkad/Desktop/HDL_laboratorium/oled/oled.srcs/sim_1/new/tb_oled_top.v w ]
+add_files -fileset sim_1 C:/Users/arkad/Desktop/HDL_laboratorium/oled/oled.srcs/sim_1/new/tb_oled_top.v
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top tb_oled_top [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+launch_simulation
+close_sim
+launch_simulation
+source tb_oled_top.tcl
+relaunch_sim
+relaunch_sim
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+import_files -fileset sim_1 -norecurse C:/Users/arkad/Desktop/HDL_laboratorium/oled/oled.srcs/pixel_SSD1306.dat
+relaunch_sim
+run 150 ms
+run 150 ms
+run 150 ms
+close_sim

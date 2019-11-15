@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Nov 13 14:18:14 2019
+# Process ID: 8920
+# Current directory: C:/Users/arkad/Desktop/HDL_laboratorium/oled
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent14180 C:\Users\arkad\Desktop\HDL_laboratorium\oled\oled.xpr
+# Log file: C:/Users/arkad/Desktop/HDL_laboratorium/oled/vivado.log
+# Journal file: C:/Users/arkad/Desktop/HDL_laboratorium/oled\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/arkad/Desktop/HDL_laboratorium/oled/oled.xpr
+update_compile_order -fileset sources_1

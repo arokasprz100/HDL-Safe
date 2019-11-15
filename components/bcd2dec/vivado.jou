@@ -1,0 +1,15 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Nov 15 22:01:26 2019
+# Process ID: 15720
+# Current directory: C:/Users/arkad/Desktop/Sejf-github/HDL-Safe/components/bcd2dec
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent9224 C:\Users\arkad\Desktop\Sejf-github\HDL-Safe\components\bcd2dec\bcd2dec.xpr
+# Log file: C:/Users/arkad/Desktop/Sejf-github/HDL-Safe/components/bcd2dec/vivado.log
+# Journal file: C:/Users/arkad/Desktop/Sejf-github/HDL-Safe/components/bcd2dec\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/arkad/Desktop/Sejf-github/HDL-Safe/components/bcd2dec/bcd2dec.xpr
+update_compile_order -fileset sources_1
+reset_simulation -simset sim_1 -mode behavioral

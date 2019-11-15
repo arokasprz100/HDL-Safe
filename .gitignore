@@ -8,10 +8,10 @@
 #########
 #Exclude
 #Journal - files
-**/*.jou
+*.jou
 #Reports
-**/*.rpt
-**/*.txt
+*.rpt
+*.txt
 
 #Exclude all
 *

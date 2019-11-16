@@ -12,6 +12,8 @@
 #Reports
 *.rpt
 *.txt
+##Jobs
+**/.jobs
 
 #Exclude all
 *

@@ -27,7 +27,7 @@ module tb_bcd2dec();
     reg up;
     wire gsr = glbl.GSR;
     reg [3:0] bcd0; 
-    reg [1:0] bcd1;
+    reg [3:0] bcd1;
 
     // UUT
     bcd2dec #(.mod(32)) BCD2DEC (

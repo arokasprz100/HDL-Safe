@@ -58,69 +58,77 @@ module rse_decoder(
             nextState = counterClockwiseWaitADown;
         else
             nextState = clockwiseWaitADown;
+            
         case (currentState)
         
             clockwiseWaitADown: 
-                begin
-                    knobCounterEnable <= 0;
-                    isDirectionChanged <= 0; // a moze tutaj zerowanie
-                    if(a == 0) 
-                        nextState = clockwiseWaitAUp;
-                    else nextState = clockwiseWaitADown;
-                end
+                if(a == 0) nextState = clockwiseWaitAUp;
+                else nextState = clockwiseWaitADown;
             
             clockwiseWaitAUp:
                 if(a == 1) nextState = clockwiseAPosedge;
                 else nextState = clockwiseWaitAUp;
                 
             clockwiseAPosedge:
-                if(b == 1) begin
-                    isDirectionChanged <= 1; // kiedy wyzerowac?
-                    nextState = counterClockwiseCounter;
-                end
-                else begin
-                    isDirectionChanged <= 0; // czy to tutaj powinno byc?
-                    nextState = clockwiseCounter;
-                end
+                if(b == 1) nextState = counterClockwiseCounter;
+                else nextState = clockwiseCounter;
                 
-            clockwiseCounter:
-                begin
-                   isDirectionClockwise <= 1; //na rysunku jest 0, ale to przecie¿ clockwise wiec powinno byc 1
-                   knobCounterEnable <= 1; 
-                   nextState <= clockwiseWaitADown;
-                end
+            clockwiseCounter: nextState <= clockwiseWaitADown;
                 
             counterClockwiseWaitADown:
-                begin
-                    knobCounterEnable <= 0;
-                    isDirectionChanged <= 0; // a moze tutaj zerowanie
-                    if(a == 0) 
-                        nextState = counterClockwiseWaitAUp;
-                    else nextState = counterClockwiseWaitADown;
-                end
+                if(a == 0) nextState = counterClockwiseWaitAUp;
+                else nextState = counterClockwiseWaitADown;
             
             counterClockwiseWaitAUp:
                 if(a == 1) nextState = counterClockwiseAPosedge;
                 else nextState = counterClockwiseWaitAUp;
                 
             counterClockwiseAPosedge:
-                if(b == 0) begin
-                    isDirectionChanged <= 1; // kiedy wyzerowac?
-                    nextState = clockwiseCounter;
-                end
-                else begin
-                    isDirectionChanged <= 0; // czy to tutaj powinno byc?
-                    nextState = counterClockwiseCounter;
-                end
+                if(b == 0) nextState = clockwiseCounter;
+                else nextState = counterClockwiseCounter;
                 
-            counterClockwiseCounter:
-                 begin
-                   isDirectionClockwise <= 0; //na rysunku jest 1, ale to przecie¿ counterClockwise wiec powinno byc 0
-                   knobCounterEnable <= 1; 
-                   nextState <= counterClockwiseWaitADown;
-                end
+            counterClockwiseCounter: nextState <= counterClockwiseWaitADown;
         endcase
-        
     end
+        
+    always @(posedge clk, posedge rst) 
+    begin
+        if(rst) knobCounterEnable <= 0;
+        else if(currentState == counterClockwiseCounter || currentState == clockwiseCounter)
+            knobCounterEnable <= 1;
+        else
+            knobCounterEnable <= 0;
+    end
+    
+    always @(posedge clk, posedge rst)
+    begin
+        if(rst) isDirectionClockwise <= 0;
+        else if(currentState == clockwiseCounter)
+            isDirectionClockwise <= 1;
+        else
+            isDirectionClockwise <= 0;
+    end
+    
+    always @(posedge clk, posedge rst)
+    begin
+        if(rst) isDirectionChanged <= 0;
+        else if(currentState == counterClockwiseAPosedge)
+        begin
+            if(b==0)
+                isDirectionChanged <= 1;
+            else
+                isDirectionChanged <= 0;
+        end
+        else if(currentState == clockwiseAPosedge)
+        begin
+            if(b==0)
+                isDirectionChanged <= 0;
+            else
+                isDirectionChanged <= 1;
+        end
+        else
+            isDirectionChanged <= 0;
+    end
+        
             
 endmodule

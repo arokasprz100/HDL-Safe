@@ -73,7 +73,7 @@ module rse_decoder(
                 if(b == 1) nextState = counterClockwiseCounter;
                 else nextState = clockwiseCounter;
                 
-            clockwiseCounter: nextState <= clockwiseWaitADown;
+            clockwiseCounter: nextState = clockwiseWaitADown;
                 
             counterClockwiseWaitADown:
                 if(a == 0) nextState = counterClockwiseWaitAUp;
@@ -87,7 +87,7 @@ module rse_decoder(
                 if(b == 0) nextState = clockwiseCounter;
                 else nextState = counterClockwiseCounter;
                 
-            counterClockwiseCounter: nextState <= counterClockwiseWaitADown;
+            counterClockwiseCounter: nextState = counterClockwiseWaitADown;
         endcase
     end
         

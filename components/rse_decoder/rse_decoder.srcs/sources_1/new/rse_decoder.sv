@@ -70,7 +70,7 @@ module rse_decoder(
                 else nextState = clockwiseWaitAUp;
                 
             clockwiseAPosedge:
-                if(b == 1) nextState = counterClockwiseCounter;
+                if(b == 0) nextState = counterClockwiseCounter;
                 else nextState = clockwiseCounter;
                 
             clockwiseCounter: nextState = clockwiseWaitADown;
@@ -84,7 +84,7 @@ module rse_decoder(
                 else nextState = counterClockwiseWaitAUp;
                 
             counterClockwiseAPosedge:
-                if(b == 0) nextState = clockwiseCounter;
+                if(b == 1) nextState = clockwiseCounter;
                 else nextState = counterClockwiseCounter;
                 
             counterClockwiseCounter: nextState = counterClockwiseWaitADown;
@@ -93,41 +93,41 @@ module rse_decoder(
         
     always @(posedge clk, posedge rst) 
     begin
-        if(rst) knobCounterEnable <= 0;
+        if(rst) knobCounterEnable <= 'b0;
         else if(currentState == counterClockwiseCounter || currentState == clockwiseCounter)
-            knobCounterEnable <= 1;
+            knobCounterEnable <= 'b1;
         else
-            knobCounterEnable <= 0;
+            knobCounterEnable <= 'b0;
     end
     
     always @(posedge clk, posedge rst)
     begin
-        if(rst) isDirectionClockwise <= 0;
+        if(rst) isDirectionClockwise <= 'b0;
         else if(currentState == clockwiseCounter)
-            isDirectionClockwise <= 1;
+            isDirectionClockwise <= 'b1;
         else
-            isDirectionClockwise <= 0;
+            isDirectionClockwise <= 'b0;
     end
     
     always @(posedge clk, posedge rst)
     begin
-        if(rst) isDirectionChanged <= 0;
+        if(rst) isDirectionChanged <= 'b0;
         else if(currentState == counterClockwiseAPosedge)
         begin
             if(b==0)
-                isDirectionChanged <= 1;
+                isDirectionChanged <= 'b0;
             else
-                isDirectionChanged <= 0;
+                isDirectionChanged <= 'b1;
         end
         else if(currentState == clockwiseAPosedge)
         begin
             if(b==0)
-                isDirectionChanged <= 0;
+                isDirectionChanged <= 'b1;
             else
-                isDirectionChanged <= 1;
+                isDirectionChanged <= 'b0;
         end
         else
-            isDirectionChanged <= 0;
+            isDirectionChanged <= 'b0;
     end
         
             

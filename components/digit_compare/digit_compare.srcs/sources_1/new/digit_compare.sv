@@ -20,22 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// Komparator
+// Two digit BCD number comparator.
 module digit_compare(input [1:0] sel, [3:0] bcd1, [3:0] bcd0, output reg eq);
     
-    // kod sejfu
+    // safe code
     reg [3:0] code[0:2][0:1];
     
     initial begin
-        // pierwsza cyfra - 15
+        // first digit - 15
         code[0][0] = 4'd5;
         code[0][1] = 4'd1;
         
-        // druga cyfra - 30
+        // second digit - 30
         code[1][0] = 4'd0;
         code[1][1] = 4'd3;
         
-        // trzecia cyfra - 22
+        // third digit - 22
         code[2][0] = 4'd2;
         code[2][1] = 4'd2;
        

@@ -22,12 +22,12 @@
 
 module tb_digit_compare();
 
-    reg [3:0] bcd1, bcd0; // dziesiatki, jednostki
-    reg [1:0] sel; // wybor cyfry szyfru
-    reg eq; // czy rowne
+    reg [3:0] bcd1, bcd0; 
+    reg [1:0] sel; // digit selection
+    reg eq;
     
     // UUT
-    digit_compare DC (.bcd1(bcd1), .bcd0(bcd0),
+    digit_compare uut (.bcd1(bcd1), .bcd0(bcd0),
         .sel(sel), .eq(eq));
     
     initial begin 
@@ -35,16 +35,16 @@ module tb_digit_compare();
         bcd0 = 4'd0;
         sel = 4'd0;
         
-        // pierwsza cyfra      
+        // first digit    
         #100 bcd1 = 4'd1;
         bcd0 = 4'd5;
         
-        // druga cyfra
+        // second digit
         #10 sel = 4'd1;
         #100 bcd1 = 4'd3;
         bcd0 = 4'd0;
         
-        // trzecia cyfra
+        // third digit
         #10 sel = 4'd2;
         #100 bcd1 = 4'd2;
         bcd0 = 4'd0;

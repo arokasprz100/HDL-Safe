@@ -27,6 +27,8 @@ module MasterFsm(
     output reg [1:0] numberSelector
     );
     
+    reg actuateLock;
+    
     typedef enum {
     safeLocked,
     startOpening,
@@ -36,10 +38,14 @@ module MasterFsm(
     thirdNumberGood,
     wrongNumber,
     safeUnlocked,
-    safeLockOn
+    safeLockGood
     } statesE;
     
     statesE currentState, nextState;
+    
+    always @(posedge clk, posedge rst)
+        if(rst) currentState <= safeLocked;
+        else currentState <= nextState;
     
     always @* begin
         nextState = safeLocked;
@@ -73,13 +79,62 @@ module MasterFsm(
                 nextState = safeUnlocked;
                 
             safeUnlocked:
-                if(lock==1 && doorCls ==1) nextState = safeLockOn;
+                if(lock==1 && doorCls ==1) nextState = safeLockGood;
                 else nextState = safeUnlocked;
+            
+            safeLockGood:
+                nextState = safeLocked;
                 
             wrongNumber:
                 nextState = safeLocked; //else na rysunku?
             
         endcase
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) actuateLock <= 'b0;
+        else if(currentState == safeLocked) actuateLock <= 'b0;
+        else if(currentState == thirdNumberGood) actuateLock <= 'b1;
+        else if(currentState == safeLockGood)
+            if(doorCls == 1)
+                actuateLock <= 'b1;
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) blank <= 'b1;
+        else if(currentState == startOpening) blank <= 'b0;
+        else if(currentState == safeLocked) blank <= 'b1;
+        else if(currentState == safeUnlocked) blank <= 'b1;
+        else if(currentState == safeLockGood) blank <= 'b1;
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) enableCounter <= 'b0;
+        else if(currentState == safeLocked) enableCounter <= 'b0;
+        else if(currentState == startOpening) enableCounter <= 'b1;
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) clearCounter <= 'b1;
+        else if(currentState == safeLocked) clearCounter <= 'b1;
+        else if(currentState == startOpening) clearCounter <= 'b0; 
+        else if(currentState == safeUnlocked) clearCounter <= 'b1;
+        else if(currentState == safeLockGood) clearCounter <= 'b0;
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) isLockClosing <= 'b0;
+        else if(currentState == safeLocked) isLockClosing <= 'b0;
+        else if(currentState == thirdNumberGood) isLockClosing <= 'b1;
+        else if(currentState == safeLockGood) isLockClosing <= 'b0;
+    end
+    
+    always @(posedge clk, posedge rst) begin
+        if(rst) numberSelector <= 'b00;
+        else if(currentState == safeLocked) numberSelector <= 'b00;
+        else if(currentState == firstNumberGood) numberSelector <= 'b01;
+        else if(currentState == secondNumberGood) numberSelector <= 'b10;
+        else if(currentState == thirdNumberGood) numberSelector <= 'b00;
     end
     
 endmodule

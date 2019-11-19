@@ -20,21 +20,25 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module safeTop #(
-    parameter slowClockPeriodLength = 100000, // div
-    parameter debouncerClockPeriodLength = 100000, // deb_div
-    parameter areDebouncersUsed = 1, // deb
-    parameter firstCodeNumber = 15, // first
-    parameter secondCodeNumber = 30, // second
-    parameter thirdCodeNumber = 22 // third
+module safeTop 
+    #(
+        parameter slowClockPeriodLength = 100000, // div
+        parameter debouncerClockPeriodLength = 100000, // deb_div
+        parameter areDebouncersUsed = 1, // deb
+        parameter firstCodeNumber = 15, // first
+        parameter secondCodeNumber = 30, // second
+        parameter thirdCodeNumber = 22 // third
     )
     (
-    input clk, rst, 
-    cnten2, // TODO: replace with master_fsm signal
-    a, b, // encoder 
-    [1:0] sel, // TODO: replace with master_fsm signal 
-    output eq, // TODO: remove when master_fsm present
-    output reg [7:0] diodes);
+        input clk, rst, 
+        cnten2, // TODO: replace with master_fsm signal
+        a, b, // encoder 
+        [1:0] sel, // TODO: replace with master_fsm signal 
+        output eq, // TODO: remove when master_fsm present
+        output reg [7:0] diodes
+    );
+    
+    
     
     // clock divider
     wire slowClk;
@@ -46,7 +50,7 @@ module safeTop #(
     wire aKnob, bKnob;
     // debouncers only if areDebouncersUsed = 1
     generate 
-        if (areDebouncersUsed) begin
+        if (areDebouncersUsed) begin : debGen
         
             // clock divider for debouncers
             wire debSlowClk;
@@ -54,13 +58,19 @@ module safeTop #(
                 .clk(clk), .rst(rst), 
                 .slowClk(debSlowClk)
             );
-    
-            // debounders
-            // TODO: add debouncers and modify code
-            assign aKnob = a;
-            assign bKnob = b;
+            
+            // a signal debouncer 
+            Debouncer #(.registerSize(3)) ADEBOUNCER (
+                .clk(debSlowClk), .rst(rst), .in(a), .out(aKnob)
+            );
+            
+            // b signal debouncer 
+            Debouncer #(.registerSize(3)) BDEBOUNCER (
+                .clk(debSlowClk), .rst(rst), .in(b), .out(bKnob)
+            );
+            
         end
-        else begin
+        else begin : debNoGen
             assign aKnob = a;
             assign bKnob = b;
         end

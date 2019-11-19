@@ -32,7 +32,10 @@ module TbSafeTop();
     wire gsr = glbl.GSR;
     
     // UUT
-    safeTop #(.slowClockPeriodLength(2)) SAFE_TOP (
+    safeTop #(
+        .slowClockPeriodLength(2),
+        .debouncerClockPeriodLength(2))
+    SAFE_TOP (
         .clk(clk), .rst(rst),
         .cnten2(cnten2), 
         .a(a), .b(b),
@@ -69,17 +72,18 @@ module TbSafeTop();
         
         //clockwise and reset
         #20 a = 'b1;
-        #5 b = 'b1;
-        #20 a = 'b0;
-        #5 b = 'b0;
+        #10 b = 'b1;
+        #100 a = 'b0;
+        #10 b = 'b0;
         
-        //clockwise and reset
-        #50 a = 'b1;
-        #5 b = 'b1;
-        #20 a = 'b0;
-        #5 b = 'b0;
+        
         
         // TODO: make better testbench
+        #250 b = 'b1;
+        #20 a = 'b1;
+        #100 b = 'b0;
+        #20 a = 'b0;
+        
         
     end
 

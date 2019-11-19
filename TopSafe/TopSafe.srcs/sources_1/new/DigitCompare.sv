@@ -28,7 +28,7 @@ module DigitCompare #(
     )
     (input [1:0] sel, [3:0] bcd1, [3:0] bcd0, output reg eq);
     
-    // safe code
+    // safe code - TODO: test
     reg [5:0] code[0:2];
     
     initial begin

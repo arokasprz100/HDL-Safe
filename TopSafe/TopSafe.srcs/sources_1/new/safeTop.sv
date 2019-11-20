@@ -31,14 +31,17 @@ module safeTop
     )
     (
         input clk, rst, 
-        cnten2, // TODO: replace with master_fsm signal
+//        cnten2, // TODO: replace with master_fsm signal
         a, b, // encoder 
-        [1:0] sel, // TODO: replace with master_fsm signal 
-        output eq, // TODO: remove when master_fsm present
+//        [1:0] sel, // TODO: replace with master_fsm signal 
+//        output eq, // TODO: remove when master_fsm present
         output reg [7:0] diodes
     );
     
-    
+    wire [1:0] sel;
+    assign cnten2 = 1'b1;
+    assign sel = 2'b00;
+    assign eq = 1'b0;
     
     // clock divider
     wire slowClk;

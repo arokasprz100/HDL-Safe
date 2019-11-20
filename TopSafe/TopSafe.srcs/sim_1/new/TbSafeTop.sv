@@ -37,9 +37,9 @@ module TbSafeTop();
         .debouncerClockPeriodLength(2))
     SAFE_TOP (
         .clk(clk), .rst(rst),
-        .cnten2(cnten2), 
+//        .cnten2(cnten2), 
         .a(a), .b(b),
-        .sel(sel), .eq(eq), 
+//        .sel(sel), .eq(eq), 
         .diodes(diodes)
     );
     

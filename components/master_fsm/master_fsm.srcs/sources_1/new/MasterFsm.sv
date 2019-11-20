@@ -23,11 +23,10 @@
 module MasterFsm(
     input clk, rst,
     input isDirectionChanged, isDirectionClockwise, knobCounterEnable, doorCls, open, lock, eq,
-    output reg enableCounter, clearCounter, blank, numberSelector, triggerLock, isLockClosing,
+    output reg enableCounter, clearCounter, blank, triggerLock, isLockClosing,
     output reg [1:0] numberSelector
     );
     
-    reg actuateLock;
     
     typedef enum {
     safeLocked,
@@ -92,12 +91,12 @@ module MasterFsm(
     end
     
     always @(posedge clk, posedge rst) begin
-        if(rst) actuateLock <= 'b0;
-        else if(currentState == safeLocked) actuateLock <= 'b0;
-        else if(currentState == thirdNumberGood) actuateLock <= 'b1;
+        if(rst) triggerLock <= 'b0;
+        else if(currentState == safeLocked) triggerLock <= 'b0;
+        else if(currentState == thirdNumberGood) triggerLock <= 'b1;
         else if(currentState == safeLockGood)
             if(doorCls == 1)
-                actuateLock <= 'b1;
+                triggerLock <= 'b1;
     end
     
     always @(posedge clk, posedge rst) begin

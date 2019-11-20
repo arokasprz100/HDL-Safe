@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 20.11.2019 14:57:48
+// Create Date: 20.11.2019 22:42:52
 // Design Name: 
-// Module Name: TbOledSafe
+// Module Name: TbOledDriver
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,22 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TbOledSafe();
-
+module TbOledDriver();
+    
     reg rst, clk;
     wire gsr = glbl.GSR;
     reg blank;
     reg [7:0] bcdData;
+    wire sclk, sdo, dc, vdd, vbat, res;
         
-    OledSafe #(.dvbat(2)) TOP(
+    OledDriver #(.dvbat(2)) TOP (
         .clk(clk),
         .rst(rst),
         .blank(blank),
+        .bcdData(bcdData),
         .sclk(sclk), .sdo(sdo), .dc(dc),
         .vdd(vdd), .vbat(vbat), .res(res)
     );
     
-    // zegar
+    // clock
     initial begin
         clk = 1'b0;
         forever #5 clk = ~clk;
@@ -52,10 +54,12 @@ module TbOledSafe();
     // data
     initial begin
         blank = 1'b1;
-        bcdData = 8'b00000000;
+        bcdData = {4'd0, 4'd0};
         @(negedge gsr);
-        #500 blank = 1'b0;
-        bcdData = 8'b00010110;
+        @(negedge vbat);
+        #350000 blank = 1'b0;
+        bcdData = {4'd1, 4'd5};
     end
-
+    
+    
 endmodule

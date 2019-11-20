@@ -30,7 +30,7 @@ module TbOledSafe();
     OledSafe #(.dvbat(2)) TOP(
         .clk(clk),
         .rst(rst),
-        .blank(blank), .bcdData(bcdData),
+        .blank(blank),
         .sclk(sclk), .sdo(sdo), .dc(dc),
         .vdd(vdd), .vbat(vbat), .res(res)
     );

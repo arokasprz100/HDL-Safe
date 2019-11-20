@@ -95,8 +95,8 @@ always @(posedge clk, posedge rst)
 	else if(st == screen) begin
 	    current_screen <= (blank ? clear_screen : code_screen);
 	    if (!blank) begin 
-	       current_screen[2][7] <= 4'd1;
-	       current_screen[7][8] <= 4'd2;
+	       current_screen[2][7] <= "1";
+	       current_screen[2][8] <= "2";
 	    end
     end
     

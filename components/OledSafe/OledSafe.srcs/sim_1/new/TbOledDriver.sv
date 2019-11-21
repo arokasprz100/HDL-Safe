@@ -59,6 +59,10 @@ module TbOledDriver();
         @(negedge vbat);
         #350000 blank = 1'b0;
         bcdData = {4'd1, 4'd5};
+        #5000000 bcdData = {4'd2, 4'd2};
+        #5000000 blank = 1'b1;
+        #5000000 bcdData = {4'd3, 4'd1};
+        #5000000 blank = 1'b0;
     end
     
     

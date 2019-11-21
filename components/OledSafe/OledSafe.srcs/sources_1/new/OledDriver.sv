@@ -74,26 +74,29 @@ module OledDriver #(parameter mod = 100_000, dvbat = 100) (
         else current <= next;
         
     
-    // input change (blank) detection
-    // TODO: figure out better way that will work on the edge of clock
-    reg tmp;
+    // here we store previous input values
+    reg previousBlank;
+    reg [7:0] previousBcdData;
     always@(posedge clk, posedge rst)
-        if(rst) tmp <= 1'b1;
-        else tmp <= blank;
-        
-    assign blank_changed = (tmp ^ blank); // XOR
-        
-    // TODO: add check if bcdData changed
-        
-        
+        if(rst) previousBlank <= blank;
+        else if (current == hold) previousBlank <= blank;
+        else if (current == wait_for_change & next == oper) previousBlank <= blank;
+        else previousBlank <= previousBlank;
+    
+    always@(posedge clk, posedge rst)
+        if(rst) previousBcdData <= bcdData;
+        else if (current == hold) previousBcdData <= bcdData;
+        else if (current == wait_for_change & next == oper) previousBcdData <= bcdData;
+        else previousBcdData <= previousBcdData;
+           
     // next state logic
     always@* begin
-        next = idle;    
+        next = idle;
         case (current) 
             idle: next = hold;
             hold: next = init_done ? oper : hold;
             oper: next = oper_done ? wait_for_change : oper; 
-            wait_for_change: next = (blank_changed ? oper : wait_for_change);
+            wait_for_change: next = ((previousBlank != blank | (blank == 1'b0 & previousBcdData != bcdData)) ? oper : wait_for_change);
         endcase
     end
     

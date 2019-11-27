@@ -78,16 +78,23 @@ module OledDriver #(parameter mod = 100_000, dvbat = 100) (
     reg previousBlank;
     reg [7:0] previousBcdData;
     always@(posedge clk, posedge rst)
-        if(rst) previousBlank <= blank;
-        else if (current == hold) previousBlank <= blank;
-        else if (current == wait_for_change & next == oper) previousBlank <= blank;
-        else previousBlank <= previousBlank;
+        if(rst) begin 
+            previousBlank <= blank;
+            previousBcdData <= bcdData;
+        end
+        else if (current == hold) begin 
+            previousBlank <= blank;
+            previousBcdData <= bcdData;
+        end
+        else if (current == wait_for_change & next == oper) begin
+            previousBlank <= blank;
+            previousBcdData <= bcdData;
+        end
+        else begin 
+            previousBlank <= previousBlank;
+            previousBcdData <= previousBcdData;
+        end
     
-    always@(posedge clk, posedge rst)
-        if(rst) previousBcdData <= bcdData;
-        else if (current == hold) previousBcdData <= bcdData;
-        else if (current == wait_for_change & next == oper) previousBcdData <= bcdData;
-        else previousBcdData <= previousBcdData;
            
     // next state logic
     always@* begin

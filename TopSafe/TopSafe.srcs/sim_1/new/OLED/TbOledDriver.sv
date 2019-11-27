@@ -28,7 +28,7 @@ module TbOledDriver();
     reg [7:0] bcdData;
     wire sclk, sdo, dc, vdd, vbat, res;
         
-    OledDriver #(.dvbat(2)) TOP (
+    OledDriver #(.dvbat(100)) TOP (
         .clk(clk),
         .rst(rst),
         .blank(blank),
@@ -40,7 +40,7 @@ module TbOledDriver();
     // clock
     initial begin
         clk = 1'b0;
-        forever #5 clk = ~clk;
+        forever #(5 * 10000) clk = ~clk;
     end
     
     // reset

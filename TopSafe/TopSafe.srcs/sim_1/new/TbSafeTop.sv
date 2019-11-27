@@ -23,7 +23,6 @@
 module TbSafeTop();
 
     reg clk, rst;
-    reg cnten2; // TODO: remove when master_fsm present
     reg a, b; // encoder input
     reg [1:0] sel; // TODO: remove when master_fsm present
     reg eq; // TODO: remove when master_fsm present
@@ -33,11 +32,10 @@ module TbSafeTop();
     
     // UUT
     safeTop #(
-        .slowClockPeriodLength(2),
+        .slowClockPeriodLength(6),
         .debouncerClockPeriodLength(2))
     SAFE_TOP (
         .clk(clk), .rst(rst),
-//        .cnten2(cnten2), 
         .a(a), .b(b),
 //        .sel(sel), .eq(eq), 
         .diodes(diodes)
@@ -56,11 +54,6 @@ module TbSafeTop();
         @(negedge gsr);
         #5 rst = 1'b0;
     end
-
-    // cnten2 - placeholder, TODO: remove
-    initial begin
-        cnten2 = 1'b1;
-    end
     
     // a, b, sel
     initial begin
@@ -72,17 +65,17 @@ module TbSafeTop();
         
         //clockwise and reset
         #20 a = 'b1;
-        #10 b = 'b1;
-        #100 a = 'b0;
-        #10 b = 'b0;
+        #15 b = 'b1;
+        #45 a = 'b0;
+        #15 b = 'b0;
         
         
         
         // TODO: make better testbench
-        #250 b = 'b1;
-        #20 a = 'b1;
-        #100 b = 'b0;
-        #20 a = 'b0;
+        #200 b = 'b1;
+        #15 a = 'b1;
+        #45 b = 'b0;
+        #25 a = 'b0;
         
         
     end

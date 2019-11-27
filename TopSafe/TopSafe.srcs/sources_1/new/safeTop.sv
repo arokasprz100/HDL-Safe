@@ -19,7 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module safeTop 
     #(
         parameter slowClockPeriodLength = 100000, // div
@@ -35,13 +34,17 @@ module safeTop
         a, b, // encoder 
 //        [1:0] sel, // TODO: replace with master_fsm signal 
 //        output eq, // TODO: remove when master_fsm present
-        output reg [7:0] diodes
+        output reg [7:0] diodes,
+        // OLED data
+        output sclk, sdo, dc,
+        output reg vdd, vbat, res
     );
     
+    // TODO: remove placeholders
     wire [1:0] sel;
+    wire cnten2;
     assign cnten2 = 1'b1;
     assign sel = 2'b00;
-    assign eq = 1'b0;
     
     // clock divider
     wire slowClk;
@@ -116,6 +119,21 @@ module safeTop
         .clk(slowClk), .rst(rst), 
         .bcd1(bcd1), .bcd0(bcd0), 
         .diodes(diodes)
+    );
+    
+    
+    // TODO: get blank from master fsm
+    wire blank;
+    assign blank = 1'b1;
+    
+    // TODO: check if it really should be 100
+    // TODO: fix values here so counter does not break
+    OledDriver #(.mod(100)) OLEDDRIVER (
+        .clk(slowClk), .rst(rst),
+        .blank(blank), 
+        .bcdData({bcd1, bcd0}),
+        .sclk(sclk), .sdo(sdo), .dc(dc),
+        .vdd(vdd), .vbat(vbat), .res(res)
     );
     
 endmodule

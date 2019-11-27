@@ -20,22 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module delay #(parameter nbits = 4, mod = 100000) (input clk, rst, en, input [nbits-1:0] del_ms, output reg fin);
+module delay #(parameter nbits = 4) (
+        input clk, rst, en, 
+        input [nbits-1:0] del_ms, 
+        output reg fin
+    );
     
     reg [nbits-1:0] cnt_ms;
-    localparam n = $clog2(mod); // system verilog udostepnia juz taka funkcje
-    reg[n-1:0] cnt1ms;
     
     typedef enum {idle, hold, done} states_e; // system verilog
-    
     states_e st, nst; // state, next state
     
-    // maszyna stanow: rejestr stanow, logika stanu nastepnego, 
     
+    // state register
     always @(posedge clk, posedge rst)
         if(rst) st <= idle;
         else st <= nst;
-        
+    
+    // next state logic
     always @* begin
         nst = idle;
         fin = 1'b0;
@@ -46,19 +48,12 @@ module delay #(parameter nbits = 4, mod = 100000) (input clk, rst, en, input [nb
         endcase
     end
     
-    always @(posedge clk, posedge rst)
-        if(rst) cnt1ms <= {n{1'b0}};
-        else if(st == hold) 
-            if(cnt1ms != mod - 1) cnt1ms <= cnt1ms + 1;
-            else cnt1ms <= {n{1'b0}};
-        else cnt1ms <= {n{1'b0}};
-
+    // we assume here that clocks period is 1ms
+    // we increment the counter on every positive
+    // clock edge
     always @(posedge clk, posedge rst)
         if (rst) cnt_ms <= {nbits{1'b0}};
-        else if(st == hold) begin
-            if(cnt1ms == mod - 1)
-                cnt_ms <= cnt_ms + 1;
-        end
+        else if(st == hold) cnt_ms <= cnt_ms + 1;
         else cnt_ms <= {nbits{1'b0}};
 
 endmodule

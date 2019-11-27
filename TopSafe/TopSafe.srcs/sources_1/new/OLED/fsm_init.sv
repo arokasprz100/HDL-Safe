@@ -20,13 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fsm_init #(parameter modn = 100_000, delvbat = 100) (input clock, reset, en, 
+module fsm_init #(delvbat = 8'h64) // 8'h64 = 100 
+    (input clock, reset, en, 
     output sclk, sdo, output reg dc, // sdo == miso, dc == data command
     output reg vdd, vbat, res, // przerzutniki sygnalow wyjsciowych
     fin);
     
     localparam del1ms = 8'h01;
-    localparam del100ms = 8'h64;
     
     reg[7:0] del_ms;
     reg spi_fin, delay_fin; // czy spi i delay sie zakonczyly
@@ -67,7 +67,7 @@ module fsm_init #(parameter modn = 100_000, delvbat = 100) (input clock, reset, 
         .indata(cmd[7:0])
         );
     
-    delay #(.nbits(8), .mod(modn)) DelayInstance(
+    delay #(.nbits(8)) DelayInstance(
         .clk(clock),
         .rst(reset),
         .en(delay_en),

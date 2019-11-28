@@ -21,22 +21,34 @@
 
 
 module TbBcd2Dec();
-
+    
+    // inputs
     reg clk, rst;
     reg cnten1, cnten2;
     reg up;
-    wire gsr = glbl.GSR;
+    reg clrCount;
+    
+    // outputs
     reg [3:0] bcd0; 
     reg [3:0] bcd1;
 
+    // GSR
+    wire gsr = glbl.GSR;
+
+
     // UUT
     Bcd2Decades #(.mod(32)) BCD2DEC (
+        // inputs
         .clk(clk), .rst(rst),
         .cnten1(cnten1), .cnten2(cnten2), 
-        .up(up), 
+        .up(up),
+        .clrCount(clrCount), 
+        // outputs
         .bcd0(bcd0), .bcd1(bcd1)
     );
 
+
+    // inputs generation
 
     // clock
     initial begin
@@ -52,26 +64,31 @@ module TbBcd2Dec();
         #5 rst = 1'b0;
     end
     
-    // cnten2 (od master_fsm - zezwolenie na zliczanie obrotów RSE)
+    // cnten2 (from MasterFsm)
     initial begin 
         cnten2 = 1'b0;
         @(negedge gsr);
         #20 cnten2 = 1'b1;
     end
     
-    // cnten1 (od rse_decoder_fsm - impulsy zliczane przez licznik)
-    // + up - kierunek zliczania w liczniku
+    // cnten1 (from RseDecoder - those are the counted impulses)
+    // + up - counting direction
+    // + clrCount - zeroes the counter
     integer i = 0;
     initial begin
         cnten1 = 1'b0;
         up = 1'b0;
+        clrCount = 1'b0;
         @(negedge gsr);
         for (i = 0; i < 10; ++i) begin
             #10 up = {$random} % 2;
             #30 cnten1 = 1'b1;
-            #20 cnten1 = 1'b0;
+            #10 cnten1 = 1'b0;
         end
+        
+        #500 clrCount = 1'b1;
+        #20 clrCount = 1'b0;
+        
     end
-
-
+    
 endmodule

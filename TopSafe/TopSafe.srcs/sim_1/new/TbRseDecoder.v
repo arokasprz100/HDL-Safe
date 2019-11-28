@@ -27,21 +27,26 @@ module TbRseDecoder();
     wire gsr = glbl.GSR;
     wire knobCounterEnable, isDirectionClockwise, isDirectionChanged;
     
-    RseDecoder RSE_DECODER(.a(a), .b(b), .clk(clk), .rst(rst), .knobCounterEnable(knobCounterEnable), .isDirectionClockwise(isDirectionClockwise), .isDirectionChanged(isDirectionChanged));
+    RseDecoder RSE_DECODER(
+        .a(a), .b(b), 
+        .clk(clk), .rst(rst), 
+        .knobCounterEnable(knobCounterEnable), 
+        .isDirectionClockwise(isDirectionClockwise), 
+        .isDirectionChanged(isDirectionChanged)
+    );
     
     initial
     begin
         clk = 'b0;
         @(negedge gsr);
-        forever #4 clk  = ~clk;
+        forever #5 clk  = ~clk;
     end
     
     initial
     begin 
-        rst = 'b0;
-        @(negedge gsr);
         rst = 'b1;
-        #4 rst  = 'b0;
+        @(negedge gsr);
+        #10 rst = 'b0;
     end
     
     initial 
@@ -50,41 +55,42 @@ module TbRseDecoder();
         b = 'b0;
         @(negedge gsr);
         
+   
         //clockwise and reset
-        #8 a = 'b1;
-        #7 b = 'b1;
-        #18 a = 'b0;
-        #12 b = 'b0;
+        #50 a = 'b1;
+        #5 b = 'b1;
+        #10 a = 'b0;
+        #5 b = 'b0;
         
         //clockwise and reset
-        #40 a = 'b1;
-        #6 b = 'b1;
-        #12 a = 'b0;
-        #6 b = 'b0;
+        #50 a = 'b1;
+        #5 b = 'b1;
+        #10 a = 'b0;
+        #5 b = 'b0;
         
         //counterclockwise and reset
-        #40 b = 'b1;
-        #6 a = 'b1;
-        #12 b = 'b0;
-        #6 a = 'b0;
+        #50 b = 'b1;
+        #5 a = 'b1;
+        #10 b = 'b0;
+        #5 a = 'b0;
     
         //counterclockwise and reset
-        #40 b = 'b1;
-        #6 a = 'b1;
-        #12 b = 'b0;
-        #6 a = 'b0;
+        #50 b = 'b1;
+        #5 a = 'b1;
+        #10 b = 'b0;
+        #5 a = 'b0;
         
         //clockwise and reset
-        #40 a = 'b1;
-        #6 b = 'b1;
-        #12 a = 'b0;
-        #6 b = 'b0;
+        #50 a = 'b1;
+        #5 b = 'b1;
+        #10 a = 'b0;
+        #5 b = 'b0;
         
         //clockwise and reset
-        #40 a = 'b1;
-        #6 b = 'b1;
-        #12 a = 'b0;
-        #6 b = 'b0;
+        #50 a = 'b1;
+        #5 b = 'b1;
+        #10 a = 'b0;
+        #5 b = 'b0;
         
     end
 endmodule

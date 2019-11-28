@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fsm_init #(parameter delvbat = 8'h64) // 8'h64 = 100 
+module fsm_init #(parameter mod = 100_000, parameter delvbat = 8'h64) // 8'h64 = 100 
     (input clock, reset, en, 
     output sclk, sdo, output reg dc, // sdo == miso, dc == data command
     output reg vdd, vbat, res, // przerzutniki sygnalow wyjsciowych
@@ -67,7 +67,7 @@ module fsm_init #(parameter delvbat = 8'h64) // 8'h64 = 100
         .indata(cmd[7:0])
         );
     
-    delay #(.nbits(8)) DelayInstance(
+    delay #(.nbits(8), .mod(mod)) DelayInstance(
         .clk(clock),
         .rst(reset),
         .en(delay_en),

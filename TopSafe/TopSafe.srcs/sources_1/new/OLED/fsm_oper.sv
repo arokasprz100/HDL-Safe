@@ -2,7 +2,7 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////
-module fsm_oper #(parameter reg [11:0] del4s = 12'd4000, reg [11:0] del1s = 12'd1000) (
+module fsm_oper (
 	input blank, [7:0] bcdData,
 	input clk, rst, en,
     output sdo, sclk, fin, output reg dc
@@ -16,7 +16,7 @@ reg [4:0] cnt_ind;
 reg [11:0] delay_ms;
 reg [10:0] addr;
 reg [7:0] romout, spi_data_data;
-reg spi_en_data, delay_en, page_en;
+reg spi_en_data, page_en;
 wire [7:0] spi_data_cmd, spi_data;
 wire romen, spi_fin, spi_en;
 

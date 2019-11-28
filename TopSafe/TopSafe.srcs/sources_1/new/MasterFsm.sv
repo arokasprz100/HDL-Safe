@@ -23,7 +23,7 @@
 module MasterFsm(
     input clk, rst,
     input isDirectionChanged, isDirectionClockwise, knobCounterEnable, doorCls, open, lock, eq,
-    output reg enableCounter, clearCounter, blank, triggerLock, isLockClosing,
+    output reg enableCounter, clearCounter, blank, triggerLock, isLockBeingOpened,
     output reg [1:0] numberSelector
     );
     
@@ -122,10 +122,10 @@ module MasterFsm(
     end
     
     always @(posedge clk, posedge rst) begin
-        if(rst) isLockClosing <= 'b0;
-        else if(currentState == safeLocked) isLockClosing <= 'b0;
-        else if(currentState == thirdNumberGood) isLockClosing <= 'b1;
-        else if(currentState == safeLockGood) isLockClosing <= 'b0;
+        if(rst) isLockBeingOpened <= 'b0;
+        else if(currentState == safeLocked) isLockBeingOpened <= 'b0;
+        else if(currentState == thirdNumberGood) isLockBeingOpened <= 'b1;
+        else if(currentState == safeLockGood) isLockBeingOpened <= 'b0;
     end
     
     always @(posedge clk, posedge rst) begin

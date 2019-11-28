@@ -22,13 +22,15 @@
 
 module TbOledDriver();
     
+    
+    
     reg rst, clk;
     wire gsr = glbl.GSR;
     reg blank;
     reg [7:0] bcdData;
     wire sclk, sdo, dc, vdd, vbat, res;
         
-    OledDriver #(.dvbat(100)) TOP (
+    OledDriver #(.mod(1), .dvbat(100)) TOP (
         .clk(clk),
         .rst(rst),
         .blank(blank),
@@ -40,7 +42,7 @@ module TbOledDriver();
     // clock
     initial begin
         clk = 1'b0;
-        forever #(5 * 10000) clk = ~clk;
+        forever #5 clk = ~clk;
     end
     
     // reset
@@ -57,12 +59,20 @@ module TbOledDriver();
         bcdData = {4'd0, 4'd0};
         @(negedge gsr);
         @(negedge vbat);
-        #350000 blank = 1'b0;
+        
+        // first screen change
+        #2000000 blank = 1'b0;
+        
+        // second screen change
+        #2000000 blank = 1'b1;
+        
+        // third screen change
         bcdData = {4'd1, 4'd5};
-        #5000000 bcdData = {4'd2, 4'd2};
-        #5000000 blank = 1'b1;
-        #5000000 bcdData = {4'd3, 4'd1};
-        #5000000 blank = 1'b0;
+        #2000000 blank = 1'b0;
+        
+        // fourth screen change
+        #2000000 bcdData = {4'd2, 4'd2};
+        
     end
     
     

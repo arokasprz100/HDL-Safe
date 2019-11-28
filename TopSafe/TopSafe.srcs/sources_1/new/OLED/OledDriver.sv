@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module OledDriver #(parameter dvbat = 100) (
+module OledDriver #(parameter mod = 100_000, parameter dvbat = 100) (
     input clk, input rst,
     input blank, 
     input [7:0] bcdData, 
@@ -37,7 +37,7 @@ module OledDriver #(parameter dvbat = 100) (
     wire sclk_oper, sdo_oper, fsm_oper_en, oper_done; // fsm_oper inputs
     
     // fsm_init module instance
-    fsm_init #(.delvbat(dvbat)) INIT(
+    fsm_init #(.mod(mod), .delvbat(dvbat)) INIT(
         .clock(clk),
         .reset(rst),
         .sclk(sclk_init),
@@ -80,8 +80,8 @@ module OledDriver #(parameter dvbat = 100) (
     reg [7:0] previousBcdData;
     always@(posedge clk, posedge rst)
         if(rst) begin 
-            previousBlank <= blank;
-            previousBcdData <= bcdData;
+            previousBlank <= 1'b0;
+            previousBcdData <= 8'b00000000;
         end
         else if (current == hold) begin 
             previousBlank <= blank;

@@ -72,6 +72,10 @@
 !*.elf
 !*.bmm
 !*.xmp
+## Verilog headers
+!*.vh
+## Data files
+!*.dat
 
 ### XilinxVivado ###
 #.xci: IP-core property file with core container disabled

@@ -22,12 +22,20 @@
 
 module TbDigitCompare();
 
+    localparam firstCodeNumber = 15;
+    localparam secondCodeNumber = 30;
+    localparam thirdCodeNumber = 22;
+
     reg [3:0] bcd1, bcd0; 
     reg [1:0] sel; // digit selection
     reg eq;
     
     // UUT
-    DigitCompare #(.firstCodeNumber(15), .secondCodeNumber(30), .thirdCodeNumber(22)) uut (
+    DigitCompare #(
+        .firstCodeNumber(firstCodeNumber), 
+        .secondCodeNumber(secondCodeNumber), 
+        .thirdCodeNumber(thirdCodeNumber)
+        ) uut (
         .bcd1(bcd1), .bcd0(bcd0),
         .sel(sel), .eq(eq)
     );

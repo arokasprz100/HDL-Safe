@@ -41,7 +41,7 @@ module TbSafeTop();
     // UUT outputs declaration
     reg [7:0] diodes;
     reg triggerLock; // actuateLock - trigger lock position change
-    reg isLockClosing; // openCls - lock movement directory
+    reg isLockBeingOpened; // openCls - lock movement directory
     
     // outputs for OLED declaration
     reg sclk, sdo, dc;
@@ -70,7 +70,7 @@ module TbSafeTop();
         // outputs
         .diodes(diodes),
         .triggerLock(triggerLock),
-        .isLockClosing(isLockClosing),
+        .isLockBeingOpened(isLockBeingOpened),
         // OLED outputs
         .sclk(sclk), .sdo(sdo), .dc(dc),
         .vdd(vdd), .vbat(vbat), .res(res)

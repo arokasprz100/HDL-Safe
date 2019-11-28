@@ -26,13 +26,13 @@ module TbMasterFsm();
     wire gsr = glbl.GSR;
     
     reg isDirectionChanged, isDirectionClockwise, knobCounterEnable, doorCls, open, lock, eq;
-    wire enableCounter, clearCounter, blank, triggerLock, isLockClosing;
+    wire enableCounter, clearCounter, blank, triggerLock, isLockBeingOpened;
     wire [1:0] numberSelector;
     
     MasterFsm MASTER_FSM(
         .clk(clk), .rst(rst),
         .isDirectionChanged(isDirectionChanged), .isDirectionClockwise(isDirectionClockwise), .knobCounterEnable(knobCounterEnable), .doorCls(doorCls), .open(open), .lock(lock), .eq(eq),
-        .enableCounter(enableCounter), .clearCounter(clearCounter), .blank(blank), .triggerLock(triggerLock), .isLockClosing(isLockClosing),
+        .enableCounter(enableCounter), .clearCounter(clearCounter), .blank(blank), .triggerLock(triggerLock), .isLockBeingOpened(isLockBeingOpened),
         .numberSelector(numberSelector)
         );
     

@@ -35,7 +35,7 @@ module safeTop
         doorCls, // closed door sensor - switch
         output reg [7:0] diodes,
         output reg triggerLock, // actuateLock - trigger lock position change
-        output reg isLockClosing, // openCls - lock movement directory
+        output reg isLockBeingOpened, // openCls - lock movement directory
         // OLED data
         output sclk, sdo, dc,
         output reg vdd, vbat, res
@@ -144,7 +144,7 @@ module safeTop
         .open(openDeb), // open
         .lock(lockDeb), // lock
         .triggerLock(triggerLock), // actuateLock
-        .isLockClosing(isLockClosing) // openCls
+        .isLockBeingOpened(isLockBeingOpened) // openCls
     );
     
     
@@ -188,8 +188,8 @@ module safeTop
     );
     
     
-    OledDriver #(.dvbat(100)) OLED_DRIVER (
-        .clk(slowClk), .rst(rst),
+    OledDriver #(.mod(100_000), .dvbat(100)) OLED_DRIVER (
+        .clk(clk), .rst(rst),
         .blank(blank), 
         .bcdData({bcd1, bcd0}),
         .sclk(sclk), .sdo(sdo), .dc(dc),

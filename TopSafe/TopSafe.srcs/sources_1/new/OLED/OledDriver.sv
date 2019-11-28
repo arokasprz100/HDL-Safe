@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module OledDriver #(parameter mod = 100_000, dvbat = 100) (
+module OledDriver #(parameter dvbat = 100) (
     input clk, input rst,
     input blank, 
     input [7:0] bcdData, 
@@ -37,7 +37,7 @@ module OledDriver #(parameter mod = 100_000, dvbat = 100) (
     wire sclk_oper, sdo_oper, fsm_oper_en, oper_done; // fsm_oper inputs
     
     // fsm_init module instance
-    fsm_init #(.modn(mod), .delvbat(dvbat)) INIT(
+    fsm_init #(.delvbat(dvbat)) INIT(
         .clock(clk),
         .reset(rst),
         .sclk(sclk_init),
@@ -75,6 +75,7 @@ module OledDriver #(parameter mod = 100_000, dvbat = 100) (
         
     
     // here we store previous input values
+    // TODO: synthesis generates warning here - consider rewriting
     reg previousBlank;
     reg [7:0] previousBcdData;
     always@(posedge clk, posedge rst)

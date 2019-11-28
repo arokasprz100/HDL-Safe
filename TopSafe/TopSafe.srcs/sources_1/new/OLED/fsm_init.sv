@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fsm_init #(delvbat = 8'h64) // 8'h64 = 100 
+module fsm_init #(parameter delvbat = 8'h64) // 8'h64 = 100 
     (input clock, reset, en, 
     output sclk, sdo, output reg dc, // sdo == miso, dc == data command
     output reg vdd, vbat, res, // przerzutniki sygnalow wyjsciowych

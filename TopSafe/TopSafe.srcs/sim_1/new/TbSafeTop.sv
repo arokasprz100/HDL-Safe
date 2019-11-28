@@ -22,24 +22,63 @@
 
 module TbSafeTop();
 
-    reg clk, rst;
-    reg a, b; // encoder input
-    reg [1:0] sel; // TODO: remove when master_fsm present
-    reg eq; // TODO: remove when master_fsm present
-    reg [7:0] diodes;
+    // UUT parameters
+    localparam slowClockPeriodLength = 6; // real: 100 000
+    localparam debouncerClockPeriodLength = 100000; // unused during behavioral sim.
+    localparam areDebouncersUsed = 0; // disabled during sim - real: 1
+    localparam firstCodeNumber = 15; // first part of code
+    localparam secondCodeNumber = 30; // second part of code
+    localparam thirdCodeNumber = 22; // third part of code
     
+    
+    // UUT inputs declaration
+    reg clk; // clock
+    reg rst; // reset
+    reg a, b; // encoder input
+    reg open, lock; // buttons
+    reg doorCls; // closed door sensor - switch
+    
+    // UUT outputs declaration
+    reg [7:0] diodes;
+    reg triggerLock; // actuateLock - trigger lock position change
+    reg isLockClosing; // openCls - lock movement directory
+    
+    // outputs for OLED declaration
+    reg sclk, sdo, dc;
+    reg vdd, vbat, res;
+
+    // GSR
     wire gsr = glbl.GSR;
+    
+    
     
     // UUT
     safeTop #(
-        .slowClockPeriodLength(6),
-        .debouncerClockPeriodLength(2))
+        .slowClockPeriodLength(slowClockPeriodLength),
+        .debouncerClockPeriodLength(debouncerClockPeriodLength),
+        .areDebouncersUsed(areDebouncersUsed),
+        .firstCodeNumber(firstCodeNumber),
+        .secondCodeNumber(secondCodeNumber),
+        .thirdCodeNumber(thirdCodeNumber)
+    )
     SAFE_TOP (
+        // inputs
         .clk(clk), .rst(rst),
         .a(a), .b(b),
-//        .sel(sel), .eq(eq), 
-        .diodes(diodes)
+        .open(open), .lock(lock),
+        .doorCls(doorCls),
+        // outputs
+        .diodes(diodes),
+        .triggerLock(triggerLock),
+        .isLockClosing(isLockClosing),
+        // OLED outputs
+        .sclk(sclk), .sdo(sdo), .dc(dc),
+        .vdd(vdd), .vbat(vbat), .res(res)
     );
+    
+    
+    
+    // inputs generation
     
     // clock
     initial begin
@@ -54,28 +93,55 @@ module TbSafeTop();
         @(negedge gsr);
         #5 rst = 1'b0;
     end
-    
-    // a, b, sel
+ 
+
+    // lock
     initial begin
+        lock = 1'b0; // for now, do not try it
+    end
+ 
+    // doorCls
+    initial begin
+        doorCls = 1'b0; // doe now, do not try it
+    end
+ 
+    // a, b + open
+    initial begin
+        // initial state
         a = 1'b0; 
         b = 1'b0;
-        sel = 2'b00;
-        
+        open = 1'b0;
         @(negedge gsr);
         
-        //clockwise and reset
-        #20 a = 'b1;
-        #15 b = 'b1;
-        #45 a = 'b0;
-        #15 b = 'b0;
+        #200 open = 1'b1; // here we expect changing MasterFsm state to start
+        #20 open = 1'b0;
         
+        // first part of code - clockwise
+        repeat(15) begin
+            #220 a = 'b1;
+            #30 b = 'b1;
+            #60 a = 'b0;
+            #30 b = 'b0;
+        end
         
+        // second part of code - counter clockwise
+        repeat(17) begin // change to for example 15 to check if safe fails to unlock as it should
+            #220 b = 'b1;
+            #30 a = 'b1;
+            #60 b = 'b0;
+            #30 a = 'b0;
+        end
         
-        // TODO: make better testbench
-        #200 b = 'b1;
-        #15 a = 'b1;
-        #45 b = 'b0;
-        #25 a = 'b0;
+        // third part of code - clockwise
+        repeat(24) begin
+            #220 a = 'b1;
+            #30 b = 'b1;
+            #60 a = 'b0;
+            #30 b = 'b0;
+        end
+        
+        #200 open = 1'b1; // after giving proper code
+        #20 open = 1'b0;
         
         
     end

@@ -19,24 +19,31 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-// Licznik BCD, dwucyfrowy, modulo 32
-module Bcd2Decades #(parameter mod = 32, // max + 1 wartosc w liczniku
-                parameter bits = $clog2(mod)) // liczba bitow na licznik - dla 32 powinno byc to 5
-    (input clk, rst, up, cnten1, cnten2,
+// 2-digit BCD counter (modulo 32)
+module Bcd2Decades #(
+        parameter mod = 32, // max + 1 value possible in counter
+        parameter bits = $clog2(mod) // number of bits in the counter - for 32 should be 5
+    ) 
+    (input clk, rst,
+    up, cnten1, cnten2,
+    clrCount,
     output reg [3:0] bcd0, reg [3:0] bcd1);
     
-    // licznik modulo 32 - zapisywany w zwyklym kodzie binarnym
+    // mod 32 binary counter
     reg [bits-1:0] binary_counter;
     always@(posedge clk, posedge rst)
         if (rst) begin 
             binary_counter <= {bits{1'b0}};
         end
-        else if (cnten1 & cnten2) begin // jesli liczenie wlaczone
+        else if (clrCount) begin 
+            binary_counter <= {bits{1'b0}};
+        end
+        else if (cnten1 & cnten2) begin // is counting enabled
             if (up) begin 
-                binary_counter <= (binary_counter == mod - 1 ? {bits{1'b0}} : binary_counter + 1); // zliczanie w gore
+                binary_counter <= (binary_counter == mod - 1 ? {bits{1'b0}} : binary_counter + 1); // counting up
             end
             else begin 
-                binary_counter <= (binary_counter == 0 ? mod-1 : binary_counter - 1); // zliczenie w dol
+                binary_counter <= (binary_counter == 0 ? mod-1 : binary_counter - 1); // counting down
             end
         end
         else begin 
@@ -44,12 +51,12 @@ module Bcd2Decades #(parameter mod = 32, // max + 1 wartosc w liczniku
         end
         
         
-    // konwersja wartosci binarnej licznika na kod BCD
-    // bcd1 - dziesiatki
-    // bcd0 - jednostki
+    // binary to BCD conversion
+    // bcd1 - tens
+    // bcd0 - units
     reg [3:0] bcd0tmp;
     reg [3:0] bcd1tmp;
-    always@* begin // algorytm: https://my.eng.utah.edu/~nmcdonal/Tutorials/BCDTutorial/BCDConversion.html
+    always@* begin // algorithm: https://my.eng.utah.edu/~nmcdonal/Tutorials/BCDTutorial/BCDConversion.html
         automatic integer i = 0;
         bcd0tmp = 4'b0000;
         bcd1tmp = 4'b0000;
@@ -65,7 +72,7 @@ module Bcd2Decades #(parameter mod = 32, // max + 1 wartosc w liczniku
     end
     
     
-    // przerzutnik dla wartosci kodu BCD
+    // BCD output FF
     always@(posedge clk, posedge rst)
         if(rst) begin
             bcd0 <= 4'b0000;

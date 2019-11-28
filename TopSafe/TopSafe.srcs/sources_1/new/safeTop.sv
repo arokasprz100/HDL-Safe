@@ -30,30 +30,52 @@ module safeTop
     )
     (
         input clk, rst, 
-//        cnten2, // TODO: replace with master_fsm signal
         a, b, // encoder 
-//        [1:0] sel, // TODO: replace with master_fsm signal 
-//        output eq, // TODO: remove when master_fsm present
+        open, lock, // buttons
+        doorCls, // closed door sensor - switch
         output reg [7:0] diodes,
+        output reg triggerLock, // actuateLock - trigger lock position change
+        output reg isLockClosing, // openCls - lock movement directory
         // OLED data
         output sclk, sdo, dc,
         output reg vdd, vbat, res
     );
     
-    // TODO: remove placeholders
-    wire [1:0] sel;
-    wire cnten2;
-    assign cnten2 = 1'b1;
-    assign sel = 2'b00;
+    /////////////////////////////////////////////////
+    // wires
+    /////////////////////////////////////////////////
     
-    // clock divider
+    // RseDecoder output
+    wire knobCounterEnable; // cnten (cnten1)
+    wire isDirectionClockwise; // up
+    wire isDirectionChanged; // dirch
+    
+    // MasterFsm output
+    wire enableCounter; // cntEn (cnten2)
+    wire clearCounter; // clrCount
+    wire blank; // blank
+    wire [1:0] numberSelector; // sel
+    
+    // Bcd2Decades outputs
+    wire [3:0] bcd0; // units
+    wire [3:0] bcd1; // tens
+    
+    // DigitCompare outputs
+    wire eq; // eq
+    
+    // Debouncers outputs
+    wire aKnob, bKnob; // debounced a and b
+    wire lockDeb, openDeb; // debounced lock and open
+    
+    // ClockDiv output
     wire slowClk;
-    ClockDiv #(.clockPeriodLength(slowClockPeriodLength)) CLKDIV (
-        .clk(clk), .rst(rst), 
-        .slowClk(slowClk)
-    );
     
-    wire aKnob, bKnob;
+    
+    
+    /////////////////////////////////////////////////
+    // debouncers
+    /////////////////////////////////////////////////
+    
     // debouncers only if areDebouncersUsed = 1
     generate 
         if (areDebouncersUsed) begin : debGen
@@ -75,17 +97,58 @@ module safeTop
                 .clk(debSlowClk), .rst(rst), .in(b), .out(bKnob)
             );
             
+            // open signal debouncer
+            Debouncer #(.registerSize(3)) OPENDEBOUNCER (
+                .clk(debSlowClk), .rst(rst), .in(open), .out(openDeb)
+            );
+            
+            // lock signal debouncer
+            Debouncer #(.registerSize(3)) LOCKDEBOUNCER (
+                .clk(debSlowClk), .rst(rst), .in(lock), .out(lockDeb)
+            );
+            
         end
         else begin : debNoGen
             assign aKnob = a;
             assign bKnob = b;
+            assign openDeb = open;
+            assign lockDeb = lock;
         end
     endgenerate
     
+    
+    
+    /////////////////////////////////////////////////
+    // instances
+    /////////////////////////////////////////////////
+    
+    
+    // clock divider
+    ClockDiv #(.clockPeriodLength(slowClockPeriodLength)) CLK_DIV (
+        .clk(clk), .rst(rst), 
+        .slowClk(slowClk)
+    );
+    
+    
+    MasterFsm MASTER_FSM (
+        .clk(slowClk), .rst(rst),
+        .isDirectionChanged(isDirectionChanged), // dirch
+        .isDirectionClockwise(isDirectionClockwise), // up
+        .knobCounterEnable(knobCounterEnable), // cnten (cnten1)
+        .enableCounter(enableCounter), // countEn (cnten2)
+        .clearCounter(clearCounter), // clrCount
+        .doorCls(doorCls), // doorCls
+        .eq(eq), // eq
+        .blank(blank), // blank
+        .numberSelector(numberSelector), // sel
+        .open(openDeb), // open
+        .lock(lockDeb), // lock
+        .triggerLock(triggerLock), // actuateLock
+        .isLockClosing(isLockClosing) // openCls
+    );
+    
+    
     // rse_decoder_fsm
-    wire knobCounterEnable; // cnten (cnten1)
-    wire isDirectionClockwise; // up
-    wire isDirectionChanged; // dirch
     RseDecoder RSE_DECODER (
         .clk(slowClk), .rst(rst),
         .a(aKnob), .b(bKnob),
@@ -94,15 +157,16 @@ module safeTop
         .isDirectionChanged(isDirectionChanged)
     );
 
-    // bcd_2dec
-    wire [3:0] bcd0; 
-    wire [3:0] bcd1;
+
     Bcd2Decades BCD2DEC (
         .clk(slowClk), .rst(rst),
-        .cnten1(knobCounterEnable), .cnten2(cnten2), 
+        .cnten1(knobCounterEnable), 
+        .cnten2(enableCounter), 
         .up(isDirectionClockwise), 
+        .clrCount(clearCounter),
         .bcd0(bcd0), .bcd1(bcd1)
     );
+    
     
     // dig_compare
     DigitCompare #(
@@ -111,24 +175,20 @@ module safeTop
         .thirdCodeNumber(thirdCodeNumber)) 
     DIGIT_COMPARE (
         .bcd1(bcd1), .bcd0(bcd0),
-        .sel(sel), .eq(eq)
+        .sel(numberSelector), 
+        .eq(eq)
     );
     
+    
     // placeholder to show status
-    LedDriver LEDDRIVER(
+    LedDriver LED_DRIVER(
         .clk(slowClk), .rst(rst), 
         .bcd1(bcd1), .bcd0(bcd0), 
         .diodes(diodes)
     );
     
     
-    // TODO: get blank from master fsm
-    wire blank;
-    assign blank = 1'b1;
-    
-    // TODO: check if it really should be 100
-    // TODO: fix values here so counter does not break
-    OledDriver #(.mod(100)) OLEDDRIVER (
+    OledDriver #(.dvbat(100)) OLED_DRIVER (
         .clk(slowClk), .rst(rst),
         .blank(blank), 
         .bcdData({bcd1, bcd0}),

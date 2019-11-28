@@ -83,3 +83,8 @@
 #!*.dcp
 
 # End of https://www.gitignore.io/api/vivado,xilinxvivado
+
+# Latex:
+# Do not ignore:
+!*.tex
+!**/res/*

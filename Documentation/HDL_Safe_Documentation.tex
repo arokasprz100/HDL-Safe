@@ -1,0 +1,74 @@
+\documentclass[12pt] {article}
+
+%%% Preambuła %%%
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{mathptmx}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{listings}
+\selectlanguage{polish}
+
+%%% Ustawienia listingów %%%
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue},
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  breaklines=true
+}
+
+%%% Strona tytułowa %%%
+\title {
+	Języki Opisu Sprzętu \\
+	\large Projekt: Elektroniczny Sejf Hotelowy \\
+	Dokumentacja}
+
+\author {
+	Arkadiusz Kasprzak \and Jarosław Cierpich \\
+	Wydział Fizyki i Informatyki Stosowanej \\ 
+	Informatyka Stosowana}
+
+	
+\begin{document}
+
+\begin{figure}
+\centering
+\includegraphics[scale = 1.5]{res/agh_znk_wbr_cmyk}
+\end{figure}
+
+%%% Strona tytułowa %%%
+\maketitle
+
+%%% Spis treści %%%
+\newpage
+\tableofcontents
+
+\section{Wstęp}
+
+\section{Projekt}
+\subsection{Założenia projektowe}
+\subsection{Wymagana funkcjonalność}
+
+\section{Dokumentacja użytkownika}
+
+\section{Dokumentacja techniczna}
+\subsection{Warstwa Hardware}
+\subsection{Warstwa Software - architektura}
+\subsection{Warstwa Software - moduły projektu}
+
+\section{Analiza procesu syntezy}
+
+\section{Testy}
+\subsection{Moduły Test Bench}
+\subsection{Testy manualne}
+
+
+
+\end{document}

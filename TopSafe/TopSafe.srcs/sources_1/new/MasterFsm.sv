@@ -94,6 +94,7 @@ module MasterFsm(
         if(rst) triggerLock <= 'b0;
         else if(currentState == safeLocked) triggerLock <= 'b0;
         else if(currentState == thirdNumberGood) triggerLock <= 'b1;
+        else if(currentState == safeUnlocked) triggerLock <= 'b0;
         else if(currentState == safeLockGood)
             if(doorCls == 1)
                 triggerLock <= 'b1;

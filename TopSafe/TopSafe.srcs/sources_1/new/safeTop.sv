@@ -22,11 +22,11 @@
 module safeTop 
     #(
         parameter slowClockPeriodLength = 100000, // div
-        parameter debouncerClockPeriodLength = 100000, // deb_div
+        parameter debouncerClockPeriodLength = 300007, // deb_div - must be high to remove glitches
         parameter areDebouncersUsed = 1, // deb
         parameter firstCodeNumber = 15, // first
         parameter secondCodeNumber = 30, // second
-        parameter thirdCodeNumber = 22 // third
+        parameter thirdCodeNumber = 9 // third
     )
     (
         input clk, rst, 
@@ -34,8 +34,6 @@ module safeTop
         open, lock, // buttons
         doorCls, // closed door sensor - switch
         output reg [7:0] diodes,
-        output reg triggerLock, // actuateLock - trigger lock position change
-        output reg isLockBeingOpened, // openCls - lock movement directory
         // OLED data
         output sclk, sdo, dc,
         output reg vdd, vbat, res
@@ -55,6 +53,8 @@ module safeTop
     wire clearCounter; // clrCount
     wire blank; // blank
     wire [1:0] numberSelector; // sel
+    wire triggerLock;
+    wire isLockBeingOpened;
     
     // Bcd2Decades outputs
     wire [3:0] bcd0; // units
@@ -88,12 +88,12 @@ module safeTop
             );
             
             // a signal debouncer 
-            Debouncer #(.registerSize(3)) ADEBOUNCER (
+            filter #(.N(3)) ADEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(a), .out(aKnob)
             );
             
             // b signal debouncer 
-            Debouncer #(.registerSize(3)) BDEBOUNCER (
+            filter #(.N(3)) BDEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(b), .out(bKnob)
             );
             
@@ -183,7 +183,7 @@ module safeTop
     // placeholder to show status
     LedDriver LED_DRIVER(
         .clk(slowClk), .rst(rst), 
-        .bcd1(bcd1), .bcd0(bcd0), 
+        .bcd1({3'b000, isLockBeingOpened}), .bcd0({3'b000, triggerLock}), 
         .diodes(diodes)
     );
     

@@ -143,8 +143,48 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 \subsection{Warstwa Hardware}
 
 \subsection{Warstwa Software - architektura}
-
- \begin{forest}
+Poniższy diagram przedstawia wysokopoziomową architekturę projektu:\\
+\textbf{TUTAJ DAC DIAGRAM}\\
+Poniższy diagram przedstawia strukturę modułów i połączeń między nimi zastosowaną w projekcie:\\
+\textbf{TUTAJ DAC DIAGRAM}\\
+Wysokopoziomowa struktura katalogów i plików przedstawiona została poniżej:\\
+\begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\small\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+		[TopSafe
+			[TopSafe.xpr,file]
+			[TopSafe.srcs
+				[constrs\_1]
+				[sim\_1]
+				[sources\_1]
+      		]
+      	]	
+\end{forest} \\
+Struktura wewnętrzna katalogu \textbf{constrs\_1} jest następująca: \\ 
+\begin{forest}
       for tree={
         font=\ttfamily,
         grow'=0,

@@ -92,15 +92,89 @@ Niniejszy dokument stanowi dokumentację projektu \textbf{Elektroniczny Sejf Hot
 Ten rozdział poświęcony został opisowi założeń projektowych oraz wymaganej funkcjonalności.
 
 \subsection{Założenia projektowe}
+Projekt dostarczać ma funkcji elektronicznego sejfu hotelowego, to znaczy pozwalać ma na otwieranie go za pomocą z góry ustalonego szyfru oraz późniejsze zamknięcie go. Projekt ma być zrealizowany na płytce rozwojowej \textbf{Zedboard} (do Xilinx Zynq-7000). Ze względu na okoliczności wykonywania projektu (projekt jako zaliczenie przedmiotu) przyjęte zostały pewne uproszczenia:
+\begin{itemize}
+\item czujnik zamknięcia sejfu zastąpiony zostaje przełącznikiem obsługiwanym przez użytkownika
+\item szyfr jest parametrem projektu - nie jest możliwa jego modyfikacja na płytce bez powtórzenia procesu syntezy i implementacji
+\item ruch rygla reprezentowany jest za pomocą dwóch diod LED dostępnych na płytce
+\end{itemize}
+Do realizacji projektu użyty ma być język \textbf{SystemVerilog} oraz środowisko \textbf{Xilinx Vivado}. 
+Szyfr składać ma się z trzech liczb z przedziału \lbrack 0; 32). Liczby mają być wprowadzane przez użytkownika za pomocą pokrętła, przy czym kierunek obrotu pokrętła wskazuje, która liczba jest aktualnie wprowadzana: ruch zgody ze wskazówkami zegara oznacza pierwszą lub trzecią liczbę, ruch przeciwny do wskazówek zegara - drugą liczbę. Wprowadzenie nieprawidłowej liczby ma przerywać proces podawania szyfru - tzn. układ nie czeka, aż wprowadzony zostanie cały szyfr. Aktualnie wprowadzona liczba ma być prezentowana za pomocą wyświetlacza OLED.
+Układ ma być w miarę możliwości pozbawiony błędów związanych z drganiami styków czy niestandardowym działaniem użytkownika.
 
 \subsection{Wymagana funkcjonalność}
+Od projektu wymaga się dostarczenia następującej funkcjonalności:
+\begin{itemize}
+\item możliwość wprowadzenia przez użytkownika poprawnego szyfru składającego się z trzech liczb z zakresu \lbrack 0; 32) za pomocą pokrętła
+\item możliwość wprowadzenia przez użytkownika niepoprawnego szyfru, co automatycznie przerwać ma proces otwierania sejfu
+\item możliwość monitorowania przez użytkownika aktualnego stanu otwarcia sejfu - za pomocą diod LED
+\item możliwość monitorowania przez użytkownika aktualnie wprowadzanej wartości - za pomocą wyświetlacza OLED
+\item możliwość rozpoczęcia procesu otwierania sejfu - za pomocą przycisku \textit{Open}
+\item możliwość zamknięcia sejfu - za pomocą przycisku \textit{Close}
+\item możliwość ustalenia aktualnej pozycji rygla sejfu - za pomocą przełącznika - zastępuje to czujnik zamknięcia sejfu
+\item możliwość łatwego zaprogramowania nowego szyfru - zmiana trzech wartości w kodzie 
+\end{itemize}
+
+
+
 
 \section{Dokumentacja użytkownika}
 
+
+
+
 \section{Dokumentacja techniczna}
+
 \subsection{Warstwa Hardware}
+
 \subsection{Warstwa Software - architektura}
-\subsection{Warstwa Software - moduły projektu}
+
+
+\subsection{Warstwa Software - parametry i moduły projektu}
+Ten podrozdział opisuje część implementacji projektu - zastosowane parametry oraz moduły napisane w języku SystemVerilog.
+
+\subsubsection{Parametry projektu}
+Główny moduł projektu udostępnia następujące \textbf{parametry} pozwalające na modyfikację działania sejfu:
+\begin{itemize}
+\item \textit{slowClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowany jest sejf (z wyjątkiem debouncerów i wyświetlacza OLED). Wartość domyślna: 100000.
+\item \textit{debouncerClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowane są debouncery w projekcie. Wartość domyślna: 300007.
+\item \textit{areDebouncersUsed} - flaga włączająca lub wyłączająca generację debouncerów w projekcie. Wartość domyślna: 1 - debouncery mają zostać wygenerowane.
+\item \textit{firstCodeNumber} - pierwsza liczba szyfru. Wartość domyślna: 15.
+\item \textit{secondCodeNumber} - druga liczba szyfru. Wartość domyślna: 30.
+\item \textit{thirdCodeNumber} - trzecia liczba szyfru. Wartość domyślna: 9.
+\end{itemize}
+
+\subsubsection{Moduły projektu}
+Projekt składa się z następujących \textbf{modułów}:
+\begin{itemize}
+\item SafeTop - główny moduł projektu
+\item Bcd2Decades - licznik BCD (Binary Coded Decimal) o dwóch dekadach
+\item ClockDiv - dzielnik zegara
+\item DebouncerButtons - układ wygaszający drgania na przyciskach
+\item DebouncerKnob - układ wygaszający drgania na pokrętle
+\item DigitCompare - układ porównujący wprowadzone przez użytkownika liczby z szyfrem 
+\item LedDriver - sterownik diod LED
+\item MasterFsm - główna logika sejfu
+\item RseDecoder - układ odpowiedzialny za komunikację z pokrętłem
+\item Moduły odpowiedzialne za obsługę wyświetlacza OLED: 
+\begin{itemize}
+\item OledDriver
+\item delay
+\item fsm\_init
+\item fsm\_oper
+\item rom
+\item spi
+\item update\_page
+\end{itemize}
+\end{itemize}
+Ponadto projekt zawiera \textbf{dwa inne pliki} związane z obsługą wyświetlacza OLED:
+\begin{itemize}
+\item screens.vh
+\item pixel\_SSD1306.dat
+\end{itemize}
+W dalszej części zaprezentowane zostanie działanie poszczególnych modułów.
+
+\paragraph{SafeTop}
 
 \section{Analiza procesu syntezy}
 

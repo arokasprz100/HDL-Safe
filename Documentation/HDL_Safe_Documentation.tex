@@ -143,6 +143,13 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 \subsection{Warstwa Hardware}
 
 \subsection{Warstwa Software - architektura}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/HDL_Hierarchy.pdf}
+\end{figure}
+
+
+
 Poniższy diagram przedstawia wysokopoziomową architekturę projektu:\\
 \textbf{TUTAJ DAC DIAGRAM}\\
 Poniższy diagram przedstawia strukturę modułów i połączeń między nimi zastosowaną w projekcie:\\
@@ -320,58 +327,62 @@ Ten podrozdział opisuje część implementacji projektu - zastosowane parametry
 \subsubsection{Parametry projektu}
 Główny moduł projektu udostępnia następujące \textbf{parametry} pozwalające na modyfikację działania sejfu:
 \begin{itemize}
-\item \textit{slowClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowany jest sejf (z wyjątkiem debouncerów i wyświetlacza OLED). Wartość domyślna: 100000.
-\item \textit{debouncerClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowane są debouncery w projekcie. Wartość domyślna: 300007.
-\item \textit{areDebouncersUsed} - flaga włączająca lub wyłączająca generację debouncerów w projekcie. Wartość domyślna: 1 - debouncery mają zostać wygenerowane.
-\item \textit{firstCodeNumber} - pierwsza liczba szyfru. Wartość domyślna: 15.
-\item \textit{secondCodeNumber} - druga liczba szyfru. Wartość domyślna: 30.
-\item \textit{thirdCodeNumber} - trzecia liczba szyfru. Wartość domyślna: 9.
+\item \textbf{slowClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowany jest sejf (z wyjątkiem debouncerów i wyświetlacza OLED). Wartość domyślna: 100000.
+\item \textbf{debouncerClockPeriodLength} - współczynnik oznaczający wartość dzielnika częstotliwości zegara, którym taktowane są debouncery w projekcie. Wartość domyślna: 300007.
+\item \textbf{areDebouncersUsed} - flaga włączająca lub wyłączająca generację debouncerów w projekcie. Wartość domyślna: 1 - debouncery mają zostać wygenerowane.
+\item \textbf{firstCodeNumber} - pierwsza liczba szyfru. Wartość domyślna: 15.
+\item \textbf{secondCodeNumber} - druga liczba szyfru. Wartość domyślna: 30.
+\item \textbf{thirdCodeNumber} - trzecia liczba szyfru. Wartość domyślna: 9.
 \end{itemize}
 
-\subsubsection{Moduły projektu}
+\subsubsection{Lista modułów projektu}
 Projekt składa się z następujących \textbf{modułów}:
 \begin{itemize}
-\item SafeTop - główny moduł projektu
-\item Bcd2Decades - licznik BCD (Binary Coded Decimal) o dwóch dekadach
-\item ClockDiv - dzielnik zegara
-\item DebouncerButtons - układ wygaszający drgania na przyciskach
-\item DebouncerKnob - układ wygaszający drgania na pokrętle
-\item DigitCompare - układ porównujący wprowadzone przez użytkownika liczby z szyfrem 
-\item LedDriver - sterownik diod LED
-\item MasterFsm - główna logika sejfu
-\item RseDecoder - układ odpowiedzialny za komunikację z pokrętłem
-\item Moduły odpowiedzialne za obsługę wyświetlacza OLED: 
+\item \textbf{SafeTop} - główny moduł projektu
+\item \textbf{Bcd2Decades} - licznik BCD (Binary Coded Decimal) o dwóch dekadach
+\item \textbf{ClockDiv} - dzielnik zegara
+\item \textbf{DebouncerButtons} - układ wygaszający drgania na przyciskach
+\item \textbf{DebouncerKnob} - układ wygaszający drgania na pokrętle
+\item \textbf{DigitCompare} - układ porównujący wprowadzone przez użytkownika liczby z szyfrem 
+\item \textbf{LedDriver} - sterownik diod LED
+\item \textbf{MasterFsm} - główna logika sejfu
+\item \textbf{RseDecoder} - układ odpowiedzialny za komunikację z pokrętłem
+\item Moduły odpowiedzialne za \textbf{obsługę wyświetlacza OLED}: 
 \begin{itemize}
-\item OledDriver
-\item delay
-\item fsm\_init
-\item fsm\_oper
-\item rom
-\item spi
-\item update\_page
+\item \textbf{OledDriver} - główny moduł odpowiedzialny za obsługę wyświetlacza
+\item \textbf{Delay} - moduł odpowiedzialny za generowanie opóźnień
+\item \textbf{FsmInit} - moduł odpowiedzialny za przeprowadzenie procedury inicjalizacji wyświetlacza OLED
+\item \textbf{FsmOper} - moduł odpowiedzialny za wysyłanie danych do wyświetlacza OLED
+\item \textbf{Rom} - transkoder działający na zasadzie pamięci stałej - odpowiada za dostarczenie \textit{czcionki}
+\item \textbf{Spi} - implementacja uproszczonego (jednokierunkowego) protokołu SPI
+\item \textbf{UpdatePage} - moduł powiązany z FsmOper
 \end{itemize}
 \end{itemize}
-Ponadto projekt zawiera \textbf{dwa inne pliki} związane z obsługą wyświetlacza OLED:
-\begin{itemize}
-\item screens.vh
-\item pixel\_SSD1306.dat
-\end{itemize}
-W dalszej części zaprezentowane zostanie działanie poszczególnych modułów.
+Do implementacji modułów obsługujących wyświetlacz OLED wykorzystany został w dużej części kod przygotowany w ramach zajęć laboratoryjnych z przedmiotu Języki Opisu Sprzętu. Dalsza część dokumentacji zawiera opis działania najważniejszych modułów projektu.
 
-\paragraph{SafeTop}
+\subsubsection{Moduł SafeTop}
+
+\subsubsection{Moduł RseDecoder}
+
+\subsubsection{Moduł Bcd2Decades}
+
+\subsubsection{Moduł MasterFsm}
+
+
 
 \section{Analiza procesu syntezy}
+
+
 
 \section{Testy}
 Ostatni rozdział poświęcony został procesowi testowania projektu - w tym przygotowanym modułom testowym oraz procesowi testowania manualnego. 
 
 \subsection{Moduły testujące}
-Projekt zawiera \textbf{TUTAJ WSTAWIC ILE} modułów testowych (tzw. moduły \textit{Testbench}). Umożliwiają one przeprowadzenie symulacji działania modułów projektu. Moduły testowane były za pomocą dwóch typów symulacji:
+Projekt zawiera \textbf{10} modułów testowych (tzw. moduły \textit{Testbench}). Umożliwiają one przeprowadzenie symulacji działania modułów projektu. Testy przeprowadzone zostały za pomocą dwóch typów symulacji:
 \begin{itemize}
-\item symulacja behawioralna (\textit{behavioral simulation})
+\item symulacja behawioralna (\textit{behavioural simulation})
 \item symulacja po syntezie z uwzględnieniem parametrów czasowych (\textit{post-synthesis timing simulation})
 \end{itemize}
-\textbf{TUTAJ WSTAWIC STRUKTURE TB}
 Podstawowa struktura większości modułów \textit{Testbench} jest podobna - składają się one z:
 \begin{itemize}
 \item deklaracji parametrów wejściowych modułu (jeśli takie są)
@@ -428,11 +439,11 @@ module TbExample();
     
 endmodule
 \end{lstlisting}
-
 W dalszej części tego podrozdziału omówione zostaną poszczególne moduły testujące oraz wyniki przeprowadzonych symulacji behawioralnych. 
 
-\subsubsection{Testy modułu Bcd2Dec}
+\subsubsection{Testy modułu SafeTop}
 
+\subsubsection{Testy modułu Bcd2Decades}
 
 \begin{figure}[H]
 \centering
@@ -446,11 +457,27 @@ W dalszej części tego podrozdziału omówione zostaną poszczególne moduły t
 \caption{Tutaj dac opis}
 \end{figure}
 
+\subsubsection{Testy modułu RseDecoder}
+
+\subsubsection{Testy modułu MasterFsm}
+
+
 
 \subsubsection{Testy modułu ClkDiv}
 
+\subsubsection{Testy modułu DebouncerButtons}
+
+\subsubsection{Testy modułu DigitCompare}
+
+\subsubsection{Testy modułu OledDriver}
+
+\subsubsection{Testy modułu Delay}
+
+
 \subsection{Testy manualne}
 
+
+\section{Możliwe udoskonalenia}
 
 
 \end{document}

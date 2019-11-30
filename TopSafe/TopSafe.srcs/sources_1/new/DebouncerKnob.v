@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module filter #(parameter N=3) (input clk, rst, in, 
+module DebouncerKnob #(parameter N=3) (input clk, rst, in, 
 		output reg out);
 
 reg [N:0] q;

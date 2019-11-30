@@ -5,7 +5,7 @@
 // 
 // Create Date: 10/17/2019 03:47:19 PM
 // Design Name: 
-// Module Name: spi
+// Module Name: Spi
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module spi #(parameter nb = 8)(input clk, rst, en, input[nb-1:0] indata, output sclk, fin, reg sdo);
+module Spi #(parameter nb = 8)(input clk, rst, en, input[nb-1:0] indata, output sclk, fin, reg sdo);
 
     localparam bcs = $clog2(nb);
 

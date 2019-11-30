@@ -5,7 +5,7 @@
 // 
 // Create Date: 17.11.2019 01:45:04
 // Design Name: 
-// Module Name: TbClkDiv
+// Module Name: TbClockDiv
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TbClkDiv();
+module TbClockDiv();
 
     reg clk, rst, slowClk;
     wire gsr = glbl.GSR;

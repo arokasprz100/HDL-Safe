@@ -36,7 +36,7 @@ module TbDelay();
     wire gsr = glbl.GSR;
     
     // UUT
-    delay #(.nbits(nbits), .mod(10)) UUT (
+    Delay #(.nbits(nbits), .mod(10)) UUT (
         .clk(clk), .rst(rst),
         .en(en), .del_ms(delayLength),
         .fin(fin)

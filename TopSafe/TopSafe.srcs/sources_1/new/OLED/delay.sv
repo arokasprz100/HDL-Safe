@@ -5,7 +5,7 @@
 // 
 // Create Date: 10/17/2019 02:07:10 PM
 // Design Name: 
-// Module Name: delay
+// Module Name: Delay
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module delay #(parameter nbits = 4, mod = 100000) (
+module Delay #(parameter nbits = 4, mod = 100000) (
         input clk, rst, en, 
         input [nbits-1:0] del_ms, 
         output reg fin

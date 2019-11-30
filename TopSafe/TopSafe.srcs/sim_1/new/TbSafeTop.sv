@@ -40,8 +40,6 @@ module TbSafeTop();
     
     // UUT outputs declaration
     reg [7:0] diodes;
-    reg triggerLock; // actuateLock - trigger lock position change
-    reg isLockBeingOpened; // openCls - lock movement directory
     
     // outputs for OLED declaration
     reg sclk, sdo, dc;
@@ -53,7 +51,7 @@ module TbSafeTop();
     
     
     // UUT
-    safeTop #(
+    SafeTop #(
         .slowClockPeriodLength(slowClockPeriodLength),
         .debouncerClockPeriodLength(debouncerClockPeriodLength),
         .areDebouncersUsed(areDebouncersUsed),
@@ -69,8 +67,6 @@ module TbSafeTop();
         .doorCls(doorCls),
         // outputs
         .diodes(diodes),
-        .triggerLock(triggerLock),
-        .isLockBeingOpened(isLockBeingOpened),
         // OLED outputs
         .sclk(sclk), .sdo(sdo), .dc(dc),
         .vdd(vdd), .vbat(vbat), .res(res)
@@ -97,12 +93,12 @@ module TbSafeTop();
 
     // lock
     initial begin
-        lock = 1'b0; // for now, do not try it
+        lock = 1'b0;
     end
  
     // doorCls
     initial begin
-        doorCls = 1'b0; // doe now, do not try it
+        doorCls = 1'b0; 
     end
  
     // a, b + open

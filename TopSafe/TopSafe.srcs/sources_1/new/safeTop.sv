@@ -5,7 +5,7 @@
 // 
 // Create Date: 19.11.2019 16:16:28
 // Design Name: 
-// Module Name: safeTop
+// Module Name: SafeTop
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module safeTop 
+module SafeTop 
     #(
         parameter slowClockPeriodLength = 100000, // div
         parameter debouncerClockPeriodLength = 300007, // deb_div - must be high to remove glitches
@@ -88,22 +88,22 @@ module safeTop
             );
             
             // a signal debouncer 
-            filter #(.N(3)) ADEBOUNCER (
+            DebouncerKnob #(.N(3)) ADEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(a), .out(aKnob)
             );
             
             // b signal debouncer 
-            filter #(.N(3)) BDEBOUNCER (
+            DebouncerKnob #(.N(3)) BDEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(b), .out(bKnob)
             );
             
             // open signal debouncer
-            Debouncer #(.registerSize(3)) OPENDEBOUNCER (
+            DebouncerButtons #(.registerSize(3)) OPENDEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(open), .out(openDeb)
             );
             
             // lock signal debouncer
-            Debouncer #(.registerSize(3)) LOCKDEBOUNCER (
+            DebouncerButtons #(.registerSize(3)) LOCKDEBOUNCER (
                 .clk(debSlowClk), .rst(rst), .in(lock), .out(lockDeb)
             );
             

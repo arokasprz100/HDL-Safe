@@ -5,7 +5,7 @@
 // 
 // Create Date: 
 // Design Name: 
-// Module Name: update_page
+// Module Name: UpdatePage
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module update_page (
+module UpdatePage (
     input clk, rst, en, spi_fin, 
     input [1:0] page, 
     output reg dc, spi_en, 

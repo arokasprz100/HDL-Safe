@@ -5,7 +5,7 @@
 // 
 // Create Date: 24.10.2019 02:29:20
 // Design Name: 
-// Module Name: fsm_init
+// Module Name: FsmInit
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fsm_init #(parameter mod = 100_000, parameter delvbat = 8'h64) // 8'h64 = 100 
+module FsmInit #(parameter mod = 100_000, parameter delvbat = 8'h64) // 8'h64 = 100 
     (input clock, reset, en, 
     output sclk, sdo, output reg dc, // sdo == miso, dc == data command
     output reg vdd, vbat, res, // przerzutniki sygnalow wyjsciowych
@@ -55,9 +55,9 @@ module fsm_init #(parameter mod = 100_000, parameter delvbat = 8'h64) // 8'h64 =
     };
     
     reg [8:0] cmd; // rejestr komendy 
-    reg [$clog2(nbcmd)-1:0] cnt_cmd; // licznik koment
+    reg [$clog2(nbcmd)-1:0] cnt_cmd; // licznik komend
     
-    spi SPIInstance (
+    Spi SPI (
         .clk(clock),
         .rst(reset),
         .en(spi_en),
@@ -67,7 +67,7 @@ module fsm_init #(parameter mod = 100_000, parameter delvbat = 8'h64) // 8'h64 =
         .indata(cmd[7:0])
         );
     
-    delay #(.nbits(8), .mod(mod)) DelayInstance(
+    Delay #(.nbits(8), .mod(mod)) DELAY (
         .clk(clock),
         .rst(reset),
         .en(delay_en),

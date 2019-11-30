@@ -5,7 +5,7 @@
 // 
 // Create Date: 19.11.2019 21:03:41
 // Design Name: 
-// Module Name: TbDebouncer
+// Module Name: TbDebouncerButtons
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TbDebouncer();
+module TbDebouncerButtons();
 
     localparam registerSize = 3;
 
@@ -30,7 +30,7 @@ module TbDebouncer();
     wire gsr = glbl.GSR;
     
     // UUT
-    Debouncer #(.registerSize(registerSize)) DEBOUNCER (
+    DebouncerButtons #(.registerSize(registerSize)) DEBOUNCER (
         .clk(clk), .rst(rst), .in(in), .out(out)
     );
     

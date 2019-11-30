@@ -5,7 +5,7 @@
 // 
 // Create Date: 10/10/2019 02:58:58 PM
 // Design Name: 
-// Module Name: rom
+// Module Name: Rom
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module rom(input clk, input [10:0] addr, input en, output reg[7:0] dout);
+module Rom (input clk, input [10:0] addr, input en, output reg[7:0] dout);
     
     reg[7:0] mem [0:1023]; // deklaracja 1kb pamieci
     initial $readmemh("pixel_SSD1306.dat", mem);

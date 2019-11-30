@@ -2,7 +2,7 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////
-module fsm_oper (
+module FsmOper (
 	input blank, [7:0] bcdData,
 	input clk, rst, en,
     output sdo, sclk, fin, output reg dc
@@ -35,7 +35,7 @@ typedef enum {
 
 state_e st, nst; // current state and next state
 
-spi SPI_COMP (
+Spi SPI (
     .clk(clk), .rst(rst), .en(spi_en),
 	.indata(spi_data), .sdo(sdo), .sclk(sclk), 
 	.fin(spi_fin)
@@ -45,7 +45,7 @@ assign spi_data = dc ? spi_data_data : spi_data_cmd;
 assign spi_en = dc ? spi_en_data : up_spi_en;
 
 
-update_page PAGE_ROW (
+UpdatePage PAGE_ROW (
     .clk(clk), .rst(rst), .en(page_en), 
     .spi_fin(spi_fin), .page(cnt_page[1:0]), 
 	.dc(page_fin), .spi_en(up_spi_en), 
@@ -54,7 +54,7 @@ update_page PAGE_ROW (
 
 
 //font templates
-rom CHAR_LIB_COM( 
+Rom CHAR_LIB_COM ( 
     .clk(clk), .en(romen), .addr(addr), 
     .dout(romout)
 );

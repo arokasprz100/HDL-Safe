@@ -5,7 +5,7 @@
 // 
 // Create Date: 19.11.2019 19:47:24
 // Design Name: 
-// Module Name: Debouncer
+// Module Name: DebouncerButtons
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 // implemented as shift register
-module Debouncer #(parameter registerSize=3)(input clk, rst, in, output reg out);
+module DebouncerButtons #(parameter registerSize=3)(input clk, rst, in, output reg out);
 
     reg [registerSize:0] shiftRegister;
     always@(posedge clk, posedge rst)

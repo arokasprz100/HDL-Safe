@@ -370,9 +370,32 @@ Do implementacji modułów obsługujących wyświetlacz OLED wykorzystany zosta�
 
 
 
-\section{Analiza procesu syntezy}
+\section{Analiza raportu syntezy}
 
+Rozdział zawiera analizę raportu syntezy wygenerowanego przez narzędzie \textbf{Xilinx Vivado 2019.1}. Analizie poddane zostały:
+\begin{itemize}
+\item Sposób kodowania stanów
+\item Użyte zasoby, np.: ROM, komórki logiczne
+\end{itemize}
 
+\subsection{Kodowanie stanów}
+\begin{itemize}
+\item W większości przypadków zastosowane zostało kodowanie typu \textbf{one-hot}, co jest zachowaniem domyślnym dla narzędzi Xilinx
+\item Dotyczy to następujących modułów: MasterFsm, RseDecoder, Spi, FsmOper, FsmInit
+\item Tabela przedstawiająca przykładowe kodowanie \textbf{one-hot}:
+\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
+\item W przypadku pozostałych maszyn stanów zostało zastosowane kodowanie sekwencyjne. (Delay, UpdatePage, OledDriver)
+\item Tabela przedstawiająca przykładowe kodowanie \textbf{sekwencyjne}:
+\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
+\end{itemize}
+
+\subsection{Użyte zasoby}
+\begin{itemize}
+\item Użyty został jeden blok ROM o rozmiarach 1024x8. Przeznaczony on jest na przechowywanie informacji o czcionce - informacje wczytane z pliku \textbf{pixel\_SSD1306.dat}
+\item Cały projekt składa się z \textbf{635} komórek logicznych, w tym największą ilość stanowią komórki typu \textbf{FDCE} oraz \textbf{LUT} z różną ilością argumentów.
+\item Poniższa tabela przedstawia zużycie komór dla poszczególnych modułów:
+\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
+\end{itemize}
 
 \section{Testy}
 Ostatni rozdział poświęcony został procesowi testowania projektu - w tym przygotowanym modułom testowym oraz procesowi testowania manualnego. 

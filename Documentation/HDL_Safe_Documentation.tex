@@ -24,6 +24,21 @@
  }
 
 
+\usepackage{forest}
+
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+      folder/.pic={
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+      }
+    }
+
 %%% Ustawienia listingów %%%
 \definecolor{vgreen}{RGB}{104,180,104}
 \definecolor{vblue}{RGB}{49,49,255}
@@ -128,6 +143,135 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 \subsection{Warstwa Hardware}
 
 \subsection{Warstwa Software - architektura}
+
+ \begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\small\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+		[constrs\_1
+			[new
+				[constraints.xdc,file]
+      		]
+      	]	
+\end{forest} \\
+Struktura katalogu zawierającego moduły testowe: \\
+\begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\small\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+		[sim\_1
+      		[new
+      			[OLED
+      				[TbOledDriver.sv,file]
+      			]
+				[TbBcd2Decades.sv,file]
+				[TbClkDiv.sv,file]
+				[TbDebouncerButtons.sv,file]
+				[TbDelay.sv,file]
+				[TbDigitCompare.sv,file]
+				[TbLedDriver.sv,file]
+				[TbMasterFsm.sv,file]
+				[TbRseDecoder.v,file]
+				[TbSafeTop.sv,file]
+			]
+		]
+\end{forest} \\
+Struktura katalogu zawierającego kod źródłowy projektu: \\		
+\begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\small\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+		[sources\_1
+			[new
+				[Bcd2Decades.sv,file]
+				[ClockDiv.sv,file]
+				[DebouncerButtons.sv,file]
+				[DebouncerKnob.v,file]
+				[DigitCompare.sv,file]
+				[LedDriver.sv,file]
+				[MasterFsm.sv,file]
+				[safeTop.sv,file]
+				[RseDecoder.sv,file]
+				[OLED
+					[delay.sv,file]
+					[fsm\_init.sv,file]
+					[fsm\_oper.sv,file]
+					[OledDriver.sv,file]
+					[pixel\_SSD1306.dat,file]
+					[rom.v,file]
+					[screens.vh,file]
+					[spi.sv,file]
+					[update\_page.sv,file]
+				]	
+			]
+		]
+\end{forest}
 
 
 \subsection{Warstwa Software - parametry i moduły projektu}

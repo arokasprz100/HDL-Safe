@@ -10,18 +10,15 @@
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{xcolor}
 \usepackage{listings}
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
 \selectlanguage{polish}
 
 \usepackage{geometry}
+\usepackage{pdflscape}
 
-\geometry{
- a4paper,
- total={170mm,257mm},
- left=20mm,
- top=20mm,
- }
+\geometry{a4paper, total={170mm,257mm}, left=20mm, top=20mm,}
 
 
 \usepackage{forest}
@@ -132,29 +129,35 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 
 
 
-
+\newpage
 \section{Dokumentacja użytkownika}
 
 
 
-
+\newpage
 \section{Dokumentacja techniczna}
+Rozdział opisuje szczegóły implementacji projektu - zarówno jeśli chodzi o warstwę sprzętową (hardware), jak i o oprogramowanie (software).
 
 \subsection{Warstwa Hardware}
 
 \subsection{Warstwa Software - architektura}
+W tej sekcji omówiona zostanie architektura projektu - zarówno ze względu na przepływ danych między komponentami, jak i na ich hierarchię w projekcie. \\
+Rysunek \ref{fig:hier} przestawia hierarchię instancji modułów w projekcie, z wyróżnieniem instancji modułów odpowiedzialnych za tłumienie drgań na przyciskach i pokrętle - instancje te nie są generowane w czasie symulacji behawioralnej. \\
+Diagram \textbf{DEJ DIAGRAM} przedstawia strukturę zastosowanych w projekcie modułów wraz z przepływem danych między nimi. 
+
+\begin{landscape}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/HDL_Hierarchy.pdf}
+\includegraphics[width=1.5\textwidth]{res/HDL_Hierarchy.pdf}
+\caption{Hierarchia instancji modułów zastosowana w projekcie. Nazwy w nawiasach to nazwy instancji, przed nawiasami - nazwy modułów. Na czerwono zaznaczono instancje, które nie są generowane podczas symulacji behawioralnej (wygaszanie drgań)} 
+\label{fig:hier}
 \end{figure}
+\end{landscape}
 
 
-
-Poniższy diagram przedstawia wysokopoziomową architekturę projektu:\\
-\textbf{TUTAJ DAC DIAGRAM}\\
-Poniższy diagram przedstawia strukturę modułów i połączeń między nimi zastosowaną w projekcie:\\
-\textbf{TUTAJ DAC DIAGRAM}\\
+\subsection{Warstwa Software - struktura projektu}
 Wysokopoziomowa struktura katalogów i plików przedstawiona została poniżej:\\
+\\
 \begin{forest}
       for tree={
         font=\ttfamily,
@@ -190,7 +193,9 @@ Wysokopoziomowa struktura katalogów i plików przedstawiona została poniżej:\
       		]
       	]	
 \end{forest} \\
-Struktura wewnętrzna katalogu \textbf{constrs\_1} jest następująca: \\ 
+\\
+Jest to standardowy podział dla narzędzia \textbf{Xilinx Vivado}. Plik \textbf{TopSafe.xpr} jest głównym plikiem projektu. Struktura wewnętrzna katalogu \textbf{constrs\_1} jest następująca: \\ 
+\\
 \begin{forest}
       for tree={
         font=\ttfamily,
@@ -223,33 +228,16 @@ Struktura wewnętrzna katalogu \textbf{constrs\_1} jest następująca: \\
       		]
       	]	
 \end{forest} \\
-Struktura katalogu zawierającego moduły testowe: \\
+\\
+Zawiera on plik \textit{.xdc} z tzw. Design Constraints. Katalog \textbf{sim\_1} zawiera moduły testujące (tzw. Testbench) i jego strukturę przedstawiono poniżej: \\
+\\
 \begin{forest}
-      for tree={
-        font=\ttfamily,
-        grow'=0,
-        child anchor=west,
-        parent anchor=south,
-        anchor=west,
-        calign=first,
-        inner xsep=7pt,
-        edge path={
-          \noexpand\path [draw, \forestoption{edge}]
-          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
-        },
+      for tree={font=\ttfamily, grow'=0, child anchor=west, parent anchor=south, anchor=west, calign=first, inner xsep=7pt,
+        edge path={ \noexpand\path [draw, \forestoption{edge}] (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label}; },
         % style for your file node 
         file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
-          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
-          inner xsep=2pt,font=\small\ttfamily
-                     },
-        before typesetting nodes={
-          if n=1
-            {insert before={[,phantom]}}
-            {}
-        },
-        fit=band,
-        before computing xy={l=15pt},
-      }  
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};}, inner xsep=2pt,font=\small\ttfamily },
+        before typesetting nodes={if n=1 {insert before={[,phantom]}} {} }, fit=band, before computing xy={l=15pt}, }  
 		[sim\_1
       		[new
       			[OLED
@@ -267,33 +255,16 @@ Struktura katalogu zawierającego moduły testowe: \\
 			]
 		]
 \end{forest} \\
-Struktura katalogu zawierającego kod źródłowy projektu: \\		
+\\ \\ \\ \\ \\
+Struktura katalogu \textbf{sources\_1} zawierającego kod źródłowy projektu: \\	
+\\	
 \begin{forest}
-      for tree={
-        font=\ttfamily,
-        grow'=0,
-        child anchor=west,
-        parent anchor=south,
-        anchor=west,
-        calign=first,
-        inner xsep=7pt,
-        edge path={
-          \noexpand\path [draw, \forestoption{edge}]
-          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
-        },
+      for tree={ font=\ttfamily, grow'=0, child anchor=west, parent anchor=south, anchor=west, calign=first, inner xsep=7pt,
+        edge path={\noexpand\path [draw, \forestoption{edge}] (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label}; },
         % style for your file node 
-        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
-          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
-          inner xsep=2pt,font=\small\ttfamily
-                     },
-        before typesetting nodes={
-          if n=1
-            {insert before={[,phantom]}}
-            {}
-        },
-        fit=band,
-        before computing xy={l=15pt},
-      }  
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}] (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};}, inner xsep=2pt,font=\small\ttfamily },
+        before typesetting nodes={if n=1 {insert before={[,phantom]}} {} },
+        fit=band, before computing xy={l=15pt}, }  
 		[sources\_1
 			[new
 				[Bcd2Decades.sv,file]
@@ -361,15 +332,111 @@ Projekt składa się z następujących \textbf{modułów}:
 Do implementacji modułów obsługujących wyświetlacz OLED wykorzystany został w dużej części kod przygotowany w ramach zajęć laboratoryjnych z przedmiotu Języki Opisu Sprzętu. Dalsza część dokumentacji zawiera opis działania najważniejszych modułów projektu.
 
 \subsubsection{Moduł SafeTop}
+Jest to moduł usytuowany najwyżej w hierarchii projektu - odpowiedzialny jest on za połączenie ze sobą pozostałych modułów w projekcie za pomocą ich sygnałów wejściowych i wyjściowych. Ponadto zawiera on logikę odpowiedzialną za generowanie instancji debouncerów tylko, gdy do modułu przekazany zostanie parametr \textbf{areDebouncersUsed} o wartości 1 (logiczna prawda). Zostało to osiągnięte za pomocą \textbf{bloku generate} połączonego z instrukcją sterującą if-else. Listing \ref{lst:generate} przestawia implementację opisywanego rozwiązania. Schemat blokowy przedstawiony na rysunku \ref{fig:deb} ilustruje ideę zastosowanego algorytmu.
+\begin{lstlisting}[style={verilog-style}, caption={Przykład zastosowania bloku generate do warunkowego generowania instancji debouncerów w module SafeTop}, label={lst:generate}]
+generate 
+    if (areDebouncersUsed) begin : debGen
+        
+        // clock divider for debouncers
+        wire debSlowClk;
+       	ClockDiv #(.clockPeriodLength(debouncerClockPeriodLength))
+       	DEBCLKDIV 
+       	(
+       	    .clk(clk), .rst(rst), 
+            .slowClk(debSlowClk)
+        );
+            
+        // a signal debouncer 
+        DebouncerKnob #(.N(3)) ADEBOUNCER (
+            .clk(debSlowClk), .rst(rst), .in(a), .out(aKnob)
+        );
+            
+        // b signal debouncer 
+        DebouncerKnob #(.N(3)) BDEBOUNCER (
+            .clk(debSlowClk), .rst(rst), .in(b), .out(bKnob)
+        );
+            
+        // open signal debouncer
+        DebouncerButtons #(.registerSize(3)) OPENDEBOUNCER (
+            .clk(debSlowClk), .rst(rst), .in(open), .out(openDeb)
+        );
+            
+        // lock signal debouncer
+        DebouncerButtons #(.registerSize(3)) LOCKDEBOUNCER (
+            .clk(debSlowClk), .rst(rst), .in(lock), .out(lockDeb)
+        );
+            
+    end
+    else begin : debNoGen
+    	assign aKnob = a;
+        assign bKnob = b;
+        assign openDeb = open;
+        assign lockDeb = lock;
+    end
+endgenerate
+\end{lstlisting}
 
-\subsubsection{Moduł RseDecoder}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/HDL_Generate.pdf}
+\caption{Schemat blokowy - idea działania algorytmu generującego debouncery w module SafeTop}
+\label{fig:deb}
+\end{figure}
 
 \subsubsection{Moduł Bcd2Decades}
+Jest to moduł stanowiący licznik modulo 32 zwracający wartość w formacie BCD (Binary Coded Decimal) o dwóch dekadach. Założenie formatu BCD polega na kodowaniu binarnie każdej z cyfr reprezentacji dziesiętnej wejścia osobno, tzn. np. dla wejścia (w postaci dziesiętnej) 15 osobno zakodowana zostanie cyfra 1 (co daje wynik 0001) oraz osobno cyfra 5 (co daje wynik 0101). Ostatecznie otrzymujemy więc wynik 0001 0101. Moduł Bcd2Decades składa się ze zwykłego licznika binarnego modulo 32, przerzutnika wyjściowego oraz z procesu kombinacyjnego implementującego algorytm konwersji wartości binarnej na postać BCD. Zastosowano następujący algorytm konwersji:
+\begin{enumerate}
+\item Inicjalizujemy wartości kolumn (dziesiątki i jednostki) wartością zero.
+\item Jeśli wartość w którejkolwiek z kolumn jest większa lub równa 5, dodajemy do niej wartość 3.
+\item Wykonujemy przesunięcie bitowe o jeden w lewo, przy czym najstarszy bit jednostek staje się najmłodszym bitem dziesiątek i analogicznie najstarszy bit wartości binarnej staje się najmłodszym bitem jednostek - traktujemy je tak, jakby były ustawione w następujący sposób: \{dziesiątki, jednostki, wartość binarna\}
+\item Jeśli przeprowadzono 5 iteracji (5 razy dokonano przesunięcia bitowego - liczba 5 to liczba bitów, za pomocą której reprezentujemy wartość binarną), to kończymy działanie. W przeciwnym razie powrót do kroku numer 2. 
+\end{enumerate}
+Implementacja algorytmu przestawiona została na listingu \ref{lst:bcd}. Przykładowy jego przebieg zawiera natomiast tabela \ref{table:bcdexample}.
+\begin{lstlisting}[style={verilog-style}, caption={Implementacja algorytmu zamiany wartości binarnej na postać BCD.}, label={lst:bcd}]
+reg [3:0] bcd0tmp;
+reg [3:0] bcd1tmp;
+always@* begin
+    automatic integer i = 0;
+    bcd0tmp = 4'b0000;
+    bcd1tmp = 4'b0000;
+    for (i = 0; i < 5; i = i + 1) begin
+        bcd0tmp = (bcd0tmp >= 5 ? bcd0tmp + 4'd3 : bcd0tmp);
+        bcd1tmp = (bcd1tmp >= 5 ? bcd1tmp + 4'd3 : bcd1tmp);
+            
+        bcd1tmp = bcd1tmp << 1;
+        bcd1tmp[0] = bcd0tmp[3];
+        bcd0tmp = bcd0tmp << 1;
+        bcd0tmp[0] = binary_counter[bits-i-1];
+    end
+end
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\caption{Prezentacja działania algorytmu konwersji wartości binarnej do postaci BCD na przykładzie liczby 17.}
+\begin{tabular}{llll}
+\toprule
+\rowcolor[HTML]{ECF4FF} 
+Dziesiątki                   & Jednostki                    & Postać binarna & Operacja                 \\ \midrule
+0000                         & 0000                         & 10001          &                          \\
+0000                         & 0001                         & 00010          & \textless{}\textless \#1 \\
+0000                         & 0010                         & 00100          & \textless{}\textless \#2 \\
+0000                         & 0100                         & 01000          & \textless{}\textless \#3 \\
+0000                         & \cellcolor[HTML]{FFFFC7}1000 & 10000          & \textless{}\textless \#4 \\
+0000                         & \cellcolor[HTML]{FFFFC7}1011 & 10000          & dodaj 3                  \\
+\cellcolor[HTML]{9AFF99}0001 & \cellcolor[HTML]{9AFF99}0111 & 00000          & \textless{}\textless \#5 \\
+\bottomrule  
+\end{tabular}
+\label{table:bcdexample}
+\end{table}
+
+
+\subsubsection{Moduł RseDecoder}
 
 \subsubsection{Moduł MasterFsm}
 
 
-
+\newpage
 \section{Analiza raportu syntezy}
 
 Rozdział zawiera analizę raportu syntezy wygenerowanego przez narzędzie \textbf{Xilinx Vivado 2019.1}. Analizie poddane zostały:
@@ -380,23 +447,88 @@ Rozdział zawiera analizę raportu syntezy wygenerowanego przez narzędzie \text
 
 \subsection{Kodowanie stanów}
 \begin{itemize}
-\item W większości przypadków zastosowane zostało kodowanie typu \textbf{one-hot}, co jest zachowaniem domyślnym dla narzędzi Xilinx
+\item W większości przypadków zastosowane zostało kodowanie typu \textbf{one-hot}, co jest zwykle zachowaniem domyślnym dla narzędzi Xilinx
 \item Dotyczy to następujących modułów: MasterFsm, RseDecoder, Spi, FsmOper, FsmInit
-\item Tabela przedstawiająca przykładowe kodowanie \textbf{one-hot}:
-\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
-\item W przypadku pozostałych maszyn stanów zostało zastosowane kodowanie sekwencyjne. (Delay, UpdatePage, OledDriver)
-\item Tabela przedstawiająca przykładowe kodowanie \textbf{sekwencyjne}:
-\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
+\item Tabela \ref{table:onehot} przedstawia przykładowe kodowanie \textbf{one-hot}
+\begin{table}[H]
+\centering
+\caption{Przykład kodowania typu one-hot zaistniały w wyniku syntezy projektu (moduł MasterFsm)}
+\begin{tabular}{@{}lll@{}}\\
+\toprule
+\rowcolor[HTML]{DAE8FC} 
+\textbf{Stan (State)} & \textbf{Nowe kodowanie} & \textbf{Poprzednie kodowanie}\\ \midrule
+safeLocked            & 000000001                     & 00000000000000000000000000000000         \\
+startOpening          & 000000010                     & 00000000000000000000000000000001         \\
+waitKnobCounterEnable & 000000100                     & 00000000000000000000000000000010         \\
+firstNumberGood       & 000001000                     & 00000000000000000000000000000011         \\
+secondNumberGood      & 000010000                     & 00000000000000000000000000000100         \\
+thirdNumberGood       & 000100000                     & 00000000000000000000000000000101         \\
+safeUnlocked          & 001000000                     & 00000000000000000000000000000111         \\
+safeLockGood          & 010000000                     & 00000000000000000000000000001000         \\
+wrongNumber           & 100000000                     & 00000000000000000000000000000110         \\
+\bottomrule    
+\end{tabular}
+\label{table:onehot}
+\end{table}
+\item W przypadku pozostałych maszyn stanów (Delay, UpdatePage, OledDriver) zostało zastosowane kodowanie sekwencyjne.
+\item Tabela \ref{table:seq} przedstawia przykładowe kodowanie \textbf{sekwencyjne}:
+\begin{table}[H]
+\centering
+\caption{Przykład kodowania typu sequential zaistniały w wyniku syntezy projektu (moduł UpdatePage)}
+\begin{tabular}{@{}lll@{}} \\
+\toprule
+\rowcolor[HTML]{DAE8FC} 
+\textbf{Stan (State)} & \textbf{Nowe kodowanie} & \textbf{Poprzednie kodowanie}    \\ \midrule
+idle                  & 000                     & 00000000000000000000000000000000 \\
+ClearDC               & 001                     & 00000000000000000000000000000001 \\
+SendCmd               & 010                     & 00000000000000000000000000000010 \\
+Transition1           & 011                     & 00000000000000000000000000000100 \\
+Transition2           & 100                     & 00000000000000000000000000000101 \\
+Transition5           & 101                     & 00000000000000000000000000000110 \\
+SetDC                 & 110                     & 00000000000000000000000000000011 \\
+\bottomrule  
+\end{tabular}
+\label{table:seq}
+\end{table}
 \end{itemize}
 
-\subsection{Użyte zasoby}
+\subsection{Użycie zasobów}
 \begin{itemize}
 \item Użyty został jeden blok ROM o rozmiarach 1024x8. Przeznaczony on jest na przechowywanie informacji o czcionce - informacje wczytane z pliku \textbf{pixel\_SSD1306.dat}
-\item Cały projekt składa się z \textbf{635} komórek logicznych, w tym największą ilość stanowią komórki typu \textbf{FDCE} oraz \textbf{LUT} z różną ilością argumentów.
-\item Poniższa tabela przedstawia zużycie komór dla poszczególnych modułów:
-\item WSTAWIC TABELKE :D @ARKADIUSZ KASPRZAK
+\item Cały projekt składa się z \textbf{635} komórek logicznych (cells), w tym największą ilość stanowią komórki typu \textbf{FDCE} oraz \textbf{LUT} z różną ilością argumentów.
+\item Tabela ~\ref{table:tabcells} przedstawia użycie komórek w poszczególnych modułach projektu.
 \end{itemize}
+\begin{table}[H]
+\centering
+\caption{Zużycie komórek logicznych przez poszczególne moduły projektu}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\rowcolor[HTML]{DAE8FC} 
+\textbf{} & \textbf{Instancja}                     & \textbf{Moduł}             & \textbf{Komórki (Cells)} \\ \midrule
+1         & top                                    &                            & 635                      \\
+2         & - BCD2DEC                              & Bcd2Decades                & 30                       \\
+3         & - CLK\_DIV                             & ClockDiv\_\_parameterized0 & 57                       \\
+4         & - LED\_DRIVER                          & LedDriver                  & 2                        \\
+5         & - MASTER\_FSM                          & MasterFsm                  & 37                       \\
+6         & - OLED\_DRIVER                         & OledDriver                 & 375                      \\
+7         & - - FSM\_INIT                          & FsmInit                    & 180                      \\
+8         & - - - DELAY                            & Delay                      & 71                       \\
+9         & - - - SPI                              & Spi\_2                     & 52                       \\
+10        & - - FSM\_OPER                          & FsmOper                    & 184                      \\
+11        & - - - CHAR\_LIB\_COM                   & Rom                        & 1                        \\
+12        & - - - PAGE\_ROW                        & UpdatePage                 & 27                       \\
+13        & - - - SPI                              & Spi                        & 47                       \\
+14        & - RSE\_DECODER                         & RseDecoder                 & 23                       \\
+15        & - \textbackslash{}debGen.ADEBOUNCER    & DebouncerKnob              & 6                        \\
+16        & - \textbackslash{}debGen.BDEBOUNCER    & DebouncerKnob\_0           & 6                        \\
+17        & - \textbackslash{}debGen.DEBCLKDIV     & ClockDiv                   & 64                       \\
+18        & - \textbackslash{}debGen.LOCKDEBOUNCER & DebouncerButtons           & 6                        \\
+19        & - \textbackslash{}debGen.OPENDEBOUNCER & DebouncerButtons\_1        & 6                        \\ \bottomrule
+\end{tabular}
+\label{table:tabcells}
+\end{table}
 
+\newpage
 \section{Testy}
 Ostatni rozdział poświęcony został procesowi testowania projektu - w tym przygotowanym modułom testowym oraz procesowi testowania manualnego. 
 
@@ -465,20 +597,35 @@ endmodule
 W dalszej części tego podrozdziału omówione zostaną poszczególne moduły testujące oraz wyniki przeprowadzonych symulacji behawioralnych. 
 
 \subsubsection{Testy modułu SafeTop}
+Test modułu SafeTop zakłada wyłączenie generacji debouncerów w module. Rysunek \ref{fig:behavSafeTop} przestawia wartości sygnałów uzyskane podczas testu.  Podczas testu wygenerowana została odpowiednia kombinacja sygnałów wejściowych \textit{a} i \textit{b} (sygnały pochodzące z pokrętła), by wprowadzić poprawny szyfr sejfu. Po wprowadzeniu ostatniej wartości oraz wygenerowaniu sygnału open wartość sygnału \textit{diodes} zmienia się na taką, która wskazuje, że sejf został otwarty. Zachowanie modułu jest więc zgodne z oczekiwanym.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/SafeTop_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły SafeTop}
+\label{fig:behavSafeTop}
+\end{figure}
 
 \subsubsection{Testy modułu Bcd2Decades}
+Moduł Bcd2Decades odpowiedzialny jest za zliczanie sygnałów wejściowych oraz reprezentację licznika w postaci Binary Coded Decimal. Na każdym rosnącym zboczu zegara próbkowane są linie \textit{cnten1} oraz \textit{cnten2}. Jeśli na obu z nich występuje stan wysoki, to licznik jest modyfikowany zgodnie z kierunkiem wskazanym przez sygnał \textit{up}. Rysunek \ref{fig:behavBcd2Dec1} przedstawia pomyślnie przeprowadzony test opisanej funkcjonalności. Możliwe jest również wyzerowanie licznika za pomocą sygnału \textit{clrCount} - dokładnie takie działanie można zaobserwować na rysunku \ref{fig:behavBcd2Dec2}.
+
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{res/behav_sims/Bcd2Dec_behavSim_1.png}
-\caption{Tutaj dac opis}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły Bcd2Decades}
+\label{fig:behavBcd2Dec1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{res/behav_sims/Bcd2Dec_behavSim_2.png}
-\caption{Tutaj dac opis}
+\caption{Reakcja modułu Bcd2Decades na stan wysoki sygnału clrCount.}
+\label{fig:behavBcd2Dec2}
 \end{figure}
+
+
+
+
 
 \subsubsection{Testy modułu RseDecoder}
 
@@ -486,21 +633,89 @@ W dalszej części tego podrozdziału omówione zostaną poszczególne moduły t
 
 
 
-\subsubsection{Testy modułu ClkDiv}
+\subsubsection{Testy modułu ClockDiv}
+Test modułu ClockDiv jest bardzo prosty. Jego rezultaty przedstawione zostały na rysunku \ref{fig:behavClockDiv}. Na wejście modułu podawany jest zegar. Długość okresu wynikowego zegara (\textit{slowClk}) ustalona została za pomocą parametru na sześć okresów zegara wejściowego. Test wskazuje więc, że działanie modułu jest zgodne z oczekiwaniami - okres sygnału \textit{slowClk} jest sześć razy dłuższy od okresu sygnału \textit{clk}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/ClkDiv_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły ClockDiv}
+\label{fig:behavClockDiv}
+\end{figure}
+
 
 \subsubsection{Testy modułu DebouncerButtons}
+Rysunek \ref{fig:behavDebounderButtons} przedstawia przebieg symulacji modułu DebouncerButtons. Moduł ten próbkuje na każdym rosnącym zboczu zegara wartość na linii \textit{in}. Jeśli w ciągu 3 kolejnych próbek linia utrzymuje stan wysoki, na wyjściu \textit{out} generowany jest sygnał o wartości 1. Obserwacja przebiegów pozwala stwierdzić, że moduł zachowuje się zgodnie z oczekiwaniami.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/DebouncerButtons_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły DebouncerButtons}
+\label{fig:behavDebounderButtons}
+\end{figure}
+
+
+
 
 \subsubsection{Testy modułu DigitCompare}
+Test modułu DigitCompare polegał na podawaniu na wejście modułu różnych możliwych wartości szyfru i porównywaniu ich z prawdziwym szyfrem (tutaj 15, 30, 22). W momencie, gdy podana na wejście liczba (w postaci BCD - sygnał \textit{bcd1} to cyfra dziesiątek, a \textit{bcd0} to jedności) jest zgodna z aktualnie sprawdzaną wartością szyfru, sygnał \textit{eq} powinien zmienić swój stan na wysoki. Rysunek \ref{fig:behavDigitCompare} przedstawia przebieg testu. Wynik symulacji wskazuje na poprawne działanie modułu.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/DigitCompare_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły DigitCompare}
+\label{fig:behavDigitCompare}
+\end{figure}
 
 \subsubsection{Testy modułu OledDriver}
+Moduł OledDriver reaguje na zmianę wartości sygnału \textit{blank} oraz wektora \textit{bcdData}. Test polegał więc na odczekaniu, aż zakończy się proces inicjalizacji wyświetlacza OLED, a następnie na zmianie jednego z tych dwóch sygnałów. W momencie zmiany przewidywanym zachowaniem jest nastąpienie transmisji SPI, co powinno być widoczne na linii \textit{sdo}. Przebieg symulacji (rysunek \ref{fig:behavOledDriver}) potwierdza przewidywania - moduł działa poprawnie.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/OledDriver_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły OledDriver}
+\label{fig:behavOledDriver}
+\end{figure}
+
 
 \subsubsection{Testy modułu Delay}
+Na potrzeby testu moduł Delay został skonfigurowany za pomocą parametrów w taki sposób, by odliczał jedną milisekundę jako dziesięć okresów zegara (licznik \textit{cnt1ms)}. Po zakończeniu odliczania powinna wystąpić zmiana wartości sygnału \textit{fin} na stan wysoki. Ilość milisekund, które powinny zostać policzone (licznik \textit{cnt\_ms}) określa wartość sygnału wektora wejściowego \textit{delayLength}. Przebieg symulacji przedstawiony został na rysunku \ref{fig:behavDelay} - jest on zgodny z oczekiwaniami.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/Delay_behavSim_1.png}
+\caption{Wartości sygnałów wejściowych i wyjściowych podczas testu moduły Delay}
+\label{fig:behavDelay}
+\end{figure}
 
 
 \subsection{Testy manualne}
 
-
+\newpage
 \section{Możliwe udoskonalenia}
+Projekt niepozbawiony jest niedoskonałości. Najważniejsze z nich to:
+\begin{itemize}
+\item sporadyczny zły odczyt kierunku obracania pokrętła - skutkuje to zwykle wprowadzeniem niepoprawnego kodu i koniecznością powtórzenia procedury
+\item przesuwanie się zawartości wyświetlacza OLED przy zmianie wyświetlanych danych
+\end{itemize}
 
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{skoczenagh} 
+dr inż. Andrzej Skoczeń: materiały do przedmiotu Języki Opisu Sprzętu
+\\\texttt{http://www.fis.agh.edu.pl/~skoczen/hdl/}
+
+\bibitem{bcd1} 
+Prezentacja Binary-to-BCD Converter dostępna na stronie:
+\\\texttt{http://www.tkt.cs.tut.fi/kurssit/1426/S12/Ex/ex4/Binary2BCD.pdf}
+
+\bibitem{bcd2} 
+Opracowanie algorytmu konwersji wartości binarnych od BCD ze strony:
+\\\texttt{https://my.eng.utah.edu/~nmcdonal/Tutorials/BCDTutorial/BCDConversion.html}
+
+
+\end{thebibliography}
 
 \end{document}

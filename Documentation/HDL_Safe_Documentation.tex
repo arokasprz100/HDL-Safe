@@ -2,8 +2,8 @@
 
 %%% Preambuła %%%
 \usepackage[T1]{fontenc}
-\usepackage[polish]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{polski}
 \usepackage{lmodern}
 \usepackage{hyperref}
 \usepackage{mathptmx}
@@ -13,7 +13,7 @@
 \usepackage{listings}
 \usepackage{booktabs}
 \usepackage[table,xcdraw]{xcolor}
-\selectlanguage{polish}
+
 
 \usepackage{geometry}
 \usepackage{pdflscape}
@@ -131,7 +131,67 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 
 \newpage
 \section{Dokumentacja użytkownika}
+Rozdział przedstawia czynności, które należy wykonywać, aby poprawnie korzystać z urządzenia oraz oczekiwane działanie.
 
+\subsection{Elementy wykorzystywane do interakcji z użytkownikiem}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{res/user_doc/ui.png}
+\caption{Elementy wykorzystywane do interakcji z użytkownikiem} 
+\end{figure}
+
+\begin{itemize}
+\item kolorem \textcolor{red}{czerwonym} oznaczony został ekran OLED
+\item kolorem \textcolor{blue}{niebieskim} oznaczony został przycisk rozpoczynający otwieranie sejfu
+\item kolorem \textcolor{green}{zielonym} oznaczony został przycisk resetujący cały układ
+\item kolorem \textcolor{brown}{brązowym} oznaczony został przycisk zamykający sejf
+\item kolorem \textcolor{violet}{fioletowym} oznaczony został przełącznik odblokowujący funkcję zamykania sejfu
+\item kolorem \textcolor{teal}{morskim} oznaczona została dioda sygnalizująca ruch rygla
+\item kolorem \textcolor{orange}{pomarańczowym} oznaczona została dioda sygnalizująca gotowość układu do pracy, tj. wgranie oprogramowania na płytkę
+\item kolorem \textcolor{darkgray}{ciemno szarym} oznaczona została dioda sygnalizująca otwarcie sejfu
+\item kolorem \textcolor{cyan}{jasno-niebieskim} oznaczono pokrętło służące do wprowadzania kodu otwarcia
+\end{itemize}
+
+\newpage
+\subsection{Korzystanie z urządzenia}
+\begin{itemize}
+
+\item Poprawne wgranie kodu na urządzenie można rozpoznać po zapalonej diodzie sygnalizującej  wgranie oprogramowania na płytkę oraz po napisie "Arek Kasprzak Jarek Cierpich HDL SAFE" na ekranie OLED
+
+\item W przypadku niepoprawnego działania należy wykorzystać przycisk odpowiadający za reset
+
+\item W celu rozpoczęcia otwierania należy wcisnąć przycisk do tego przeznaczony. Powodzenie akcji będzie można rozpoznać po zmianie napisu na ekranie OLED na: "CODE: 00". Napis ten wskazuje nam na aktualnie wprowadzoną część kodu, kod składa się z trzech dwucyfrowych liczb z zakresu od 0 do 32.
+
+\newpage
+\item Kod powinien zostać wprowadzony za pomocą pokrętła w następujący sposób:
+\begin{itemize}
+\item Pierwszą liczbę kodu należy wprowadzać przekręcając pokrętło zgodnie ze wskazówkami zegara. Wartość podawana na ekranie będzie się wtedy zwiększać.
+\item Aby przejść do wybierania kolejnej części kodu należy zmienić kierunek kręcenia w momencie, gdy wybrana jest odpowiednia wartość (Jeżeli nasz kod składa się z liczby 9, 6 oraz 5, to zaczynamy kręcić w przeciwnym kierunku, gdy na ekranie znajduje się 9). Wartość podawana na ekranie będzie się wtedy zmniejszać.
+\item Po osiągnięciu kolejnej części kodu (w podanym przykładzie 6) zaczynamy kręcić ponownie zgodnie ze wskazówkami zegara.
+\item Przekręcamy pokrętło aż na ekranie będzie wyświetlana ostatnia część naszego kodu (w podanym przykładzie 5)
+\item W przypadku niepowodzenia w wprowadzeniu kodu należy ponowić proces rozpoczęcia otwierania sejfu
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{res/user_doc/opening_knob.png}
+\caption{Otwieranie sejfu} 
+\end{figure}
+\newpage
+
+\item w przypadku wprowadzenia odpowiedniego kodu na chwilę zapali się dioda sygnalizująca ruch rygla oraz zapali się dioda sygnalizująca otwarcie sejfu
+
+\item w celu ponownego zamknięcia sejfu należy przestawić przełącznik uruchamiający tą funkcję oraz kliknąć odpowiedni przycisk. Poprawne zamknięcie sejfu będzie widoczne poprzez zgaszenie się diody sygnalizującej otwarty sejf.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{res/user_doc/how_to_close.png}
+\caption{Zamykanie sejfu} 
+\end{figure}
+\newpage
+
+\end{itemize}
 
 
 \newpage
@@ -139,11 +199,39 @@ Od projektu wymaga się dostarczenia następującej funkcjonalności:
 Rozdział opisuje szczegóły implementacji projektu - zarówno jeśli chodzi o warstwę sprzętową (hardware), jak i o oprogramowanie (software).
 
 \subsection{Warstwa Hardware}
+W tej sekcji zostanie przedstawiona architektura projektu z punktu widzenia \textbf{sprzętowego}
 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1\textwidth]{res/hardware_architecture.pdf}
+\caption{Przedstawia elementy sprzętowe użyte w projekcie oraz sygnały wymieniane między nimi.} 
+\end{figure}
+\label{fig:hwarch}
+\newpage
+
+Elementy użyte w realizacji projektu:
+\begin{itemize}
+\item \textbf{Enkoder obrotowy}, który za pomocą wysłanych sygnałów dostarcza informacji dotyczących obrotu oraz jego kierunku. Nie jest on częścią płytki Zynq 7000. Został podłączony za pomocą portów JD1\_N oraz JD2\_P
+\item \textbf{FPGA} czyli programowalny układ logiczny. Steruje on całym układem. Element odpowiedzialny za logikę układu
+\item \textbf{Przełącznik SW0} odpowiedzialny za dostarczanie sygnału odblokowania funkcji zamykania sejfu
+\item \textbf{Przyciski BTNC, BTNU oraz BTND} odpowiedzialne za dostarczanie sygnałów zamykania, otwierania oraz resetowania układu
+\item \textbf{Ekran OLED} który jest częścią płytki Zynq 7000. Wymaga on specjalnej procedury inicjalizującej. Informacje wysyłane są za pomocą protokołu SPI
+\item \textbf{Diody}, służą do sygnalizowania informacji na temat ruchu rygla oraz stanu sejfu (zamknięty/otwarty) 
+\end{itemize}
+
+\newpage
 \subsection{Warstwa Software - architektura}
 W tej sekcji omówiona zostanie architektura projektu - zarówno ze względu na przepływ danych między komponentami, jak i na ich hierarchię w projekcie. \\
 Rysunek \ref{fig:hier} przestawia hierarchię instancji modułów w projekcie, z wyróżnieniem instancji modułów odpowiedzialnych za tłumienie drgań na przyciskach i pokrętle - instancje te nie są generowane w czasie symulacji behawioralnej. \\
-Diagram \textbf{DEJ DIAGRAM} przedstawia strukturę zastosowanych w projekcie modułów wraz z przepływem danych między nimi. 
+Rysunek \ref{fig:swarch} przedstawia strukturę zastosowanych w projekcie modułów wraz z przepływem danych między nimi. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{res/architektura-moduly.pdf}
+\caption{Struktura modułów oraz przepływ informacji} 
+\label{fig:swarch}
+\end{figure}
 
 \begin{landscape}
 \begin{figure}[H]
@@ -432,9 +520,43 @@ Dziesiątki                   & Jednostki                    & Postać binarna &
 
 
 \subsubsection{Moduł RseDecoder}
+Moduł \textbf{RseDecoder} odpowiada za odpowiednie przetwarzanie sygnału dostarczonego przez enkoder obrotowy. Sygnał dostarczany jest wcześniej odpowiednio debounceowany w celu eliminacji drgań. Logika modułu opiera się na odpowiedniej maszynie stanów przedstawionej na Rysunku \ref{fig:rsedec}. Moduł sygnalizuje ruch rygla oraz jego kierunek osiągając stany \textit{clockwiseCounter} oraz \textit{counterClockwiseCounter}. Zmiana kierunku jest sygnalizowana poprzez przejścia z \textit{clockwisePosedge} na \textit{counterClockwiseCounter} oraz \textit{counterClockwisePosedge} na \textit{clockwiseCounter}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{res/rse_fsm_diagram.pdf}
+\caption{Maszyna stanów RseDecoder}
+\label{fig:rsedec}
+\end{figure}
+
+Wyjściami modułu są następujące sygnały:
+\begin{itemize}
+\item \textbf{knobCounterEnable} - sygnał informujący o odczycie obrotu
+\item \textbf{isDirectionClockwise} - sygnał informujący czy odczytany obrót jest zgodny z kierunkiem wskazówek zegara (1) czy też nie (0)
+\item \textbf{isDirectionChanged} - sygnał informujący o zmianie kierunku obracania względem wcześniej zarejestrowanego kierunku
+\end{itemize}
+
 
 \subsubsection{Moduł MasterFsm}
+Moduł \textbf{MasterFsm} odpowiada za główną logikę urządzenia. Decyduje on o otwarciu sejfu. Głównym jego członem jest maszyna stanów, która jest przedstawiona na Rysunku \ref{fig:masterfsm}. Znajdują się w niej przejścia między stanami sprawdzania poprawności kolejnych części szyfru, otwarcia/zamknięcia sejfu. Poprawność szyfru jest sprawdzana w momencie zmiany kierunku sygnalizowanej przez \textbf{RseDecoder}, sprawdzenia dokonuje moduł \textbf{DigitCompare} zwracając informacje do \textbf{MasterFsm}. Przejścia w module \textbf{MasterFsm} zależą również od przycisków (sygnały open, lock) oraz od przełącznika (sygnał doorCls).
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{res/master_fsm_diagram.pdf}
+\caption{Maszyna stanów MasterFsm}
+\label{fig:masterfsm}
+\end{figure}
+
+\newpage
+Wyjściami modułu są sygnały:
+\begin{itemize}
+\item \textbf{enableCounter} - uruchomienie licznika
+\item \textbf{clearCounter} - wyzerowanie licznika
+\item \textbf{blank} - wyczyszczenie wyświetlacza
+\item \textbf{triggerLock} - uruchomienie rygla
+\item \textbf{isLockBeingOpened} - kierunek ruchu rygla (otwierający/zamykający)
+\item \textbf{numberSelector} - wskazuje która liczba szyfru jest aktualnie obsługiwana
+\end{itemize}
 
 \newpage
 \section{Analiza raportu syntezy}
@@ -530,7 +652,7 @@ SetDC                 & 110                     & 000000000000000000000000000000
 
 \newpage
 \section{Testy}
-Ostatni rozdział poświęcony został procesowi testowania projektu - w tym przygotowanym modułom testowym oraz procesowi testowania manualnego. 
+Ostatni rozdział poświęcony został procesowi testowania projektu - w tym przygotowanym modułom testowym.
 
 \subsection{Moduły testujące}
 Projekt zawiera \textbf{10} modułów testowych (tzw. moduły \textit{Testbench}). Umożliwiają one przeprowadzenie symulacji działania modułów projektu. Testy przeprowadzone zostały za pomocą dwóch typów symulacji:
@@ -629,9 +751,25 @@ Moduł Bcd2Decades odpowiedzialny jest za zliczanie sygnałów wejściowych oraz
 
 \subsubsection{Testy modułu RseDecoder}
 
+Test moduły \textbf{RseDecoder} polega na wygenerowaniu sygnałów a i b o odpowiedniej długości oraz kolejności. Są one generowane w taki sposób, aby sygnalizować dwa razy ruch zgodny z kierunkiem wskazówek zegara, dwa razy ruch przeciwny do kierunku wskazówek zegara oraz dwa razy ruch zgodny z kierunkiem wskazówek zegara. Moduł testowy ukazany na Rysunku \ref{fig:rseDecTB} wykazuje, że \textbf{RseDecoder} poprawnie generuje sygnały wyjściowe dla zadanych sygnałów wejściowych.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/RseDecoder_behavSim_1.png}
+\caption{Moduł testowy dla RseDecoder}
+\label{fig:rseDecTB}
+\end{figure}
+
 \subsubsection{Testy modułu MasterFsm}
+Test modułu \textbf{MasterFsm} polega na zaaplikowaniu odpowiednich sygnałów wejściowych, tak, aby maszyna stanów przeszła przez cały proces dla odpowiedniego otwierania sejfu. Zgodnie z Rysunkiem \ref{fig:masterFsmTb} moduł poprawnie reaguje na wszystkie sygnały na co wskazują m.in. stany przyjmowane przez moduł. 
 
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/behav_sims/master_fsm_tb.png}
+\caption{Moduł testowy dla MasterFsm}
+\label{fig:masterFsmTb}
+\end{figure}
 
 \subsubsection{Testy modułu ClockDiv}
 Test modułu ClockDiv jest bardzo prosty. Jego rezultaty przedstawione zostały na rysunku \ref{fig:behavClockDiv}. Na wejście modułu podawany jest zegar. Długość okresu wynikowego zegara (\textit{slowClk}) ustalona została za pomocą parametru na sześć okresów zegara wejściowego. Test wskazuje więc, że działanie modułu jest zgodne z oczekiwaniami - okres sygnału \textit{slowClk} jest sześć razy dłuższy od okresu sygnału \textit{clk}.
@@ -689,9 +827,6 @@ Na potrzeby testu moduł Delay został skonfigurowany za pomocą parametrów w t
 \end{figure}
 
 
-\subsection{Testy manualne}
-
-\newpage
 \section{Możliwe udoskonalenia}
 Projekt niepozbawiony jest niedoskonałości. Najważniejsze z nich to:
 \begin{itemize}

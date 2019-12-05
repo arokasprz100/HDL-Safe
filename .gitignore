@@ -83,3 +83,13 @@
 #!*.dcp
 
 # End of https://www.gitignore.io/api/vivado,xilinxvivado
+
+# Latex:
+#Ignore:
+*.pdf
+# Do not ignore:
+!*.tex
+!**/behav_sims/*
+!**/res/*
+!**/HDL_Safe_Documentation.pdf
+!**/res/**

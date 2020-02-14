@@ -26,7 +26,7 @@ module SafeTop
         parameter areDebouncersUsed = 1, // deb
         parameter firstCodeNumber = 15, // first
         parameter secondCodeNumber = 30, // second
-        parameter thirdCodeNumber = 9 // third
+        parameter thirdCodeNumber = 22 // third
     )
     (
         input clk, rst, 
